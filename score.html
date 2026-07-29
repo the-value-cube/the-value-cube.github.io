@@ -9,7 +9,9 @@
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Cube Score calculator for the Value Cube" />
 <meta property="og:description" content="Six face scores, five dimension checks, guardrail caps, maturity band, evidence-quality label." />
-<meta property="og:image" content="https://the-value-cube.github.io/assets/cover.jpg" />
+<meta property="og:image" content="https://the-value-cube.github.io/assets/og-score.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
 <meta name="twitter:card" content="summary_large_image" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'%3E%3Crect width='44' height='44' rx='12' fill='%23E60027'/%3E%3Crect x='12' y='12' width='20' height='6' rx='2' fill='%23fff'/%3E%3Crect x='12' y='12' width='6' height='20' rx='2' fill='%23fff'/%3E%3C/svg%3E" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -118,6 +120,12 @@
   .startat b{color:var(--accent);}
   .evi{margin-top:14px; font-size:12.5px; color:var(--muted);}
   .evi .chip{display:inline-block; font-weight:800; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink); background:var(--paper2); border:1px solid var(--line); border-radius:999px; padding:4px 10px; margin-right:6px;}
+  .readnext{margin-top:18px; border:1px solid rgba(230,0,39,.28); background:#fff4f6; border-radius:12px; padding:14px 16px;}
+  .rn-lab{font-size:10.5px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; color:var(--accent);}
+  .rn-t{margin:7px 0 0; font-size:14.5px; line-height:1.45;}
+  .rn-p{margin:7px 0 0; font-size:13px; color:#5a2731; line-height:1.5;}
+  .rn-row{display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;}
+  .rn-row .btn{flex:1; text-align:center; min-width:130px; padding:9px 12px; font-size:13px;}
   .res-actions{display:flex; gap:8px; margin-top:18px; flex-wrap:wrap;}
   .res-actions .btn{flex:1; text-align:center; min-width:120px;}
 
@@ -218,13 +226,15 @@
           <div class="bars" id="bars"></div>
           <div class="startat" id="startat"></div>
           <div class="evi" id="evi"></div>
+          <div class="readnext" id="readnext" style="display:none"></div>
           <div class="res-actions">
             <button class="btn primary" id="copy" type="button">Copy summary</button>
+            <button class="btn" id="share" type="button">Copy share link</button>
             <button class="btn" id="print" type="button">Print / PDF</button>
           </div>
         </div>
       </div>
-      <p class="hint" style="margin:14px 4px 0; font-size:12.5px; color:var(--muted);">Nothing you enter leaves your browser: the scoring runs in the page itself, and there is no server, no storage, and no analytics.</p>
+      <p class="hint" style="margin:14px 4px 0; font-size:12.5px; color:var(--muted);">The share link carries your scores in the address itself, so a colleague opens the page exactly as you scored it. Nothing you enter leaves your browser: the scoring runs in the page itself, and there is no server, no storage, and no analytics.</p>
     </div>
   </div>
 </div>
@@ -299,6 +309,12 @@ const DIMS=[
   {n:'Risk & Compliance', short:'Risk & Compliance', s:'Sensitive data, permitted models, audit and policy'},
   {n:'Performance & Scalability', short:'Performance & Scale', s:'Latency, scale under load, visible bottlenecks'}
 ];
+/* where the book answers each face, so a result can point somewhere useful */
+const CHAPTERS={0:[9,'Cost Visibility & Spend Intelligence'],1:[10,'Value Intelligence & Outcome Realization'],
+  2:[11,'Prompt & Interaction Efficiency'],3:[12,'Context & Knowledge Right-Sizing'],
+  4:[13,'Execution Intelligence'],5:[14,'Governance, Risk & Scale']};
+const CAP_CHAPTER={'Governance':[14,'Governance, Risk & Scale'],'The Quality':[5,'the five cross-cutting dimensions'],
+  'A high-risk':[14,'Governance, Risk & Scale'],'Cost visibility':[9,'Cost Visibility & Spend Intelligence']};
 const BANDS=[
   {min:4.6, name:'Intelligent ValueOps', meaning:'Cost-to-value optimization is dynamic, governed, and continuously improved.'},
   {min:4.0, name:'Optimized', meaning:'Optimization patterns are actively measured and improved.'},
@@ -370,6 +386,7 @@ function render(){
       ? r.caps.map(c=>`<div class="cap soft"><b>Guardrail armed at ${c.limit}.</b> ${c.why} (${c.rule}).</div>`).join('')
       : `<div class="nocaps">No guardrail triggered so far.</div>`;
     document.getElementById('startat').innerHTML='<b>Score honestly.</b> The shape of the profile matters more than the number. The lowest face is the one that will move your score.';
+    document.getElementById('readnext').style.display='none';
     return;
   }
 
@@ -391,6 +408,24 @@ function render(){
   document.getElementById('startat').innerHTML = capFace
     ? `<b>Start here:</b> ${capFace}. You are capped until it moves; no gain elsewhere can lift the score past ${final.toFixed(1)}.`
     : `<b>Start here:</b> ${FACES[lowIdx].n}, your lowest face, at ${lowest}.`;
+
+  /* the payoff moment: point the result at the chapter that addresses it */
+  const capW = binding ? (caps.find(c=>c.limit===r.ceiling)||{}).why || '' : '';
+  const capKey = Object.keys(CAP_CHAPTER).find(k=>capW.startsWith(k));
+  const [ch, chTitle] = capKey ? CAP_CHAPTER[capKey] : CHAPTERS[lowIdx];
+  const faceNo = (ch>=9 && ch<=14) ? ch-8 : lowIdx+1;
+  document.getElementById('readnext').innerHTML = `
+    <div class="rn-lab">Where the book takes this</div>
+    <p class="rn-t">${capKey ? 'A guardrail is holding your score down' : 'Your lowest face is where the climb starts'}:
+      <b>Chapter ${ch}, ${chTitle}</b>.</p>
+    <p class="rn-p">${capKey
+      ? 'A cap is not a weak average, it is a weakness the book argues is not averageable. That chapter is where it gets fixed.'
+      : 'That chapter works this face cubelet by cubelet: the metrics behind it, the failure modes, and the patterns that move it.'}</p>
+    <div class="rn-row">
+      <a class="btn" href="cube.html#face-${faceNo}">Explore face ${faceNo} free</a>
+      <a class="btn primary" href="./#book">Get the book</a>
+    </div>`;
+  document.getElementById('readnext').style.display='block';
 }
 
 function summary(){
@@ -430,6 +465,37 @@ document.getElementById('copy').addEventListener('click',async e=>{
   setTimeout(()=>b.textContent='Copy summary',2000);
 });
 document.getElementById('print').addEventListener('click',()=>print());
+
+/* ---- shareable results: the whole assessment travels in the URL ---- */
+const EV_CODE={Low:'L',Medium:'M',High:'H',Verified:'V'};
+const EV_FROM={L:'Low',M:'Medium',H:'High',V:'Verified'};
+function encodeState(){
+  const d=v=>v===null?'-':String(v);
+  return 'r=' + state.faces.map(d).join('') + '.' + state.dims.map(d).join('')
+       + '.' + (state.highrisk?'y':'n') + (state.classified?'y':'n')
+       + '.' + (EV_CODE[state.evidence]||'L');
+}
+function applyState(hash){
+  const m=(hash||'').replace(/^#/,'').match(/^r=([0-9-]{6})\.([0-9-]{5})\.([yn])([yn])\.([LMHV])$/);
+  if(!m) return false;
+  const num=c=>c==='-'?null:+c;
+  state.faces=[...m[1]].map(num); state.dims=[...m[2]].map(num);
+  state.highrisk=m[3]==='y'; state.classified=m[4]==='y'; state.evidence=EV_FROM[m[5]];
+  document.getElementById('highrisk').checked=state.highrisk;
+  document.getElementById('classified').checked=state.classified;
+  document.getElementById('evidence').value=state.evidence;
+  build(); render();
+  return true;
+}
+document.getElementById('share').addEventListener('click',async e=>{
+  const b=e.currentTarget, url=location.origin+location.pathname+'#'+encodeState();
+  history.replaceState(null,'','#'+encodeState());
+  try{ await navigator.clipboard.writeText(url); b.textContent='✓ Link copied'; }
+  catch{ b.textContent='Copy failed'; }
+  setTimeout(()=>b.textContent='Copy share link',2200);
+});
+addEventListener('hashchange',()=>applyState(location.hash));
+applyState(location.hash);
 
 build(); render();
 </script>

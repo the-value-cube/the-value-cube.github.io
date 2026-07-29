@@ -9,7 +9,9 @@
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Face trade-offs: what one face does to the others" />
 <meta property="og:description" content="No face of the Cube can be optimized in isolation. The 6x6 interaction matrix, with the cubelets that drive each effect." />
-<meta property="og:image" content="https://the-value-cube.github.io/assets/cover.jpg" />
+<meta property="og:image" content="https://the-value-cube.github.io/assets/og-tradeoffs.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
 <meta name="twitter:card" content="summary_large_image" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'%3E%3Crect width='44' height='44' rx='12' fill='%23E60027'/%3E%3Crect x='12' y='12' width='20' height='6' rx='2' fill='%23fff'/%3E%3Crect x='12' y='12' width='6' height='20' rx='2' fill='%23fff'/%3E%3C/svg%3E" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -61,7 +63,9 @@
   /* matrix */
   .board{display:grid; grid-template-columns:1fr 340px; gap:30px; padding:34px 0 10px; align-items:start;}
   @media(max-width:940px){ .board{grid-template-columns:1fr;} }
-  .scroller{overflow-x:auto; padding-bottom:6px;}
+  .board > *{min-width:0;}
+  .scroller{overflow-x:auto; min-width:0; padding-bottom:6px;
+    scrollbar-width:thin; -webkit-overflow-scrolling:touch;}
   table.mx{border-collapse:separate; border-spacing:5px; min-width:600px;}
   table.mx th{font-size:11.5px; font-weight:700; color:var(--muted); text-align:left; vertical-align:bottom; padding:0 4px 4px;}
   table.mx th.rowh{width:170px; text-align:left; vertical-align:middle; color:var(--ink); font-weight:700; font-size:12.5px; padding-right:10px;}
