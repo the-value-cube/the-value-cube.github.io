@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Face trade-offs | The Value Cube (C2Valis)</title>
+<meta name="description" content="What optimizing one face of the Value Cube does to the other five: sixteen reinforcing effects, six real tensions, and what to watch in each. Free, nothing tracked." />
+<link rel="canonical" href="https://the-value-cube.github.io/tradeoffs.html" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Face trade-offs: what one face does to the others" />
+<meta property="og:description" content="No face of the Cube can be optimized in isolation. The 6x6 interaction matrix, with the cubelets that drive each effect." />
+<meta property="og:image" content="https://the-value-cube.github.io/assets/cover.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'%3E%3Crect width='44' height='44' rx='12' fill='%23E60027'/%3E%3Crect x='12' y='12' width='20' height='6' rx='2' fill='%23fff'/%3E%3Crect x='12' y='12' width='6' height='20' rx='2' fill='%23fff'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --accent:#E60027; --ink:#0f0f12; --muted:#5f5f68;
+    --paper:#ffffff; --paper2:#f5f5f7; --line:rgba(15,15,18,.12);
+    --pos:#0b7a3b; --pos-bg:#e8f7ee; --pos-line:#bfe6cf;
+    --neg:#c40021; --neg-bg:#fff1f4; --neg-line:#f3c4ce;
+    --neu-bg:#f2f2f5;
+    --man:'Manrope',ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+    --serif:'Source Serif 4',Georgia,serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0; font-family:var(--man); color:var(--ink); background:var(--paper); line-height:1.55;}
+  a{color:var(--accent); text-decoration:none;} a:hover{text-decoration:underline;}
+  .wrap{max-width:1060px; margin:0 auto; padding:0 24px;}
+  .btn{display:inline-block; cursor:pointer; font-family:var(--man); font-weight:700; font-size:14px; padding:11px 18px; border-radius:10px; border:2px solid var(--ink); color:var(--ink); background:transparent;}
+  .btn.primary{background:var(--accent); border-color:var(--accent); color:#fff;}
+  .btn.primary:hover{background:#c40021; text-decoration:none;}
+  .eyebrow{font-size:13px; font-weight:800; letter-spacing:.18em; text-transform:uppercase; color:var(--accent);}
+
+  header{position:sticky; top:0; z-index:20; background:rgba(255,255,255,.92); backdrop-filter:blur(8px); border-bottom:1px solid var(--line);}
+  .nav{display:flex; align-items:center; gap:8px; padding:14px 24px; max-width:1060px; margin:0 auto;}
+  .brand{font-weight:800; font-size:19px; color:var(--ink);} .brand b{color:var(--accent);} .brand:hover{text-decoration:none;}
+  .nav .sp{flex:1;}
+  .nav a.lnk{color:var(--muted); font-weight:600; font-size:14px; margin-left:22px;}
+  .nav a.lnk:hover{color:var(--ink); text-decoration:none;}
+  .nav a.lnk.on{color:var(--ink); font-weight:700; border-bottom:2px solid var(--accent); padding-bottom:2px;}
+  .nav .btn{margin-left:22px; padding:9px 16px;}
+  @media(max-width:860px){
+    .nav{flex-wrap:wrap; padding:12px 20px;}
+    .brand{order:1;} .nav .sp{order:2;} .nav .btn{order:3; margin-left:12px;}
+    .nav::after{content:""; flex-basis:100%; height:0; order:4;}
+    .nav a.lnk{order:5; margin:6px 20px 0 0; font-size:14px; padding:8px 0;}
+  }
+
+  .intro{padding:52px 0 30px; background:linear-gradient(180deg,#fff,var(--paper2));}
+  h1{font-size:clamp(30px,4.4vw,46px); line-height:1.05; letter-spacing:-.02em; margin:12px 0 0; font-weight:800;}
+  .lede{font-size:18px; color:#3a3a42; margin:18px 0 0; max-width:46em;}
+  .rule-quote{margin:24px 0 0; border-left:3px solid var(--accent); padding:4px 0 4px 18px;
+    font-family:var(--serif); font-size:18px; color:var(--ink); max-width:44em;}
+  .rule-quote span{display:block; font-family:var(--man); font-size:12px; font-weight:800;
+    letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-top:10px;}
+
+  /* matrix */
+  .board{display:grid; grid-template-columns:1fr 340px; gap:30px; padding:34px 0 10px; align-items:start;}
+  @media(max-width:940px){ .board{grid-template-columns:1fr;} }
+  .scroller{overflow-x:auto; padding-bottom:6px;}
+  table.mx{border-collapse:separate; border-spacing:5px; min-width:600px;}
+  table.mx th{font-size:11.5px; font-weight:700; color:var(--muted); text-align:left; vertical-align:bottom; padding:0 4px 4px;}
+  table.mx th.rowh{width:170px; text-align:left; vertical-align:middle; color:var(--ink); font-weight:700; font-size:12.5px; padding-right:10px;}
+  table.mx th.corner{font-size:10.5px; color:var(--muted); font-weight:700; line-height:1.3;}
+  table.mx td{padding:0;}
+  .cell{width:100%; min-width:78px; height:56px; border-radius:10px; cursor:pointer; border:1px solid var(--line);
+    background:var(--neu-bg); display:flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:17px; color:var(--muted); font-family:var(--man); transition:.12s;}
+  .cell:hover{transform:translateY(-2px); box-shadow:0 8px 18px rgba(15,15,18,.12);}
+  .cell.pos{background:var(--pos-bg); border-color:var(--pos-line); color:var(--pos);}
+  .cell.neg{background:var(--neg-bg); border-color:var(--neg-line); color:var(--neg);}
+  .cell.self{background:#fff; border-style:dashed; color:#c9c9d0; cursor:default;}
+  .cell.self:hover{transform:none; box-shadow:none;}
+  .cell.sel{outline:3px solid var(--ink); outline-offset:1px;}
+  .legend{display:flex; flex-wrap:wrap; gap:16px; margin-top:14px; font-size:13px; color:var(--muted);}
+  .legend b{display:inline-grid; place-items:center; width:26px; height:22px; border-radius:6px; margin-right:6px; font-size:13px;}
+  .legend .p b{background:var(--pos-bg); color:var(--pos); border:1px solid var(--pos-line);}
+  .legend .n b{background:var(--neg-bg); color:var(--neg); border:1px solid var(--neg-line);}
+  .legend .u b{background:var(--neu-bg); color:var(--muted); border:1px solid var(--line);}
+
+  /* detail */
+  .detail{position:sticky; top:96px; border:1px solid var(--line); border-radius:16px; background:#fff;
+    box-shadow:0 10px 30px rgba(15,15,18,.07); padding:22px; min-height:260px;}
+  @media(max-width:940px){ .detail{position:static;} }
+  .d-dir{font-size:12px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); line-height:1.5;}
+  .d-dir b{color:var(--ink);}
+  .d-tag{display:inline-block; margin-top:12px; font-size:11px; font-weight:800; letter-spacing:.12em;
+    text-transform:uppercase; padding:5px 11px; border-radius:999px;}
+  .d-tag.pos{background:var(--pos-bg); color:var(--pos); border:1px solid var(--pos-line);}
+  .d-tag.neg{background:var(--neg-bg); color:var(--neg); border:1px solid var(--neg-line);}
+  .d-tag.neu{background:var(--neu-bg); color:var(--muted); border:1px solid var(--line);}
+  .d-note{font-size:17px; font-weight:700; line-height:1.4; margin:14px 0 0;}
+  .d-lab{font-size:11px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); margin:20px 0 0;}
+  .d-consider{font-size:14.5px; color:#3a3a42; margin:8px 0 0; line-height:1.6;}
+  .chips{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;}
+  .chips span{font-size:12px; font-weight:700; color:#3a3a42; background:var(--paper2);
+    border:1px solid var(--line); border-radius:999px; padding:5px 11px;}
+  .hint{font-size:13.5px; color:var(--muted); margin:10px 0 0;}
+
+  section.tail{padding:44px 0 60px; border-top:1px solid var(--line); margin-top:34px;}
+  h2{font-size:clamp(22px,3vw,30px); font-weight:800; letter-spacing:-.01em; margin:8px 0 0;}
+  .sub{color:var(--muted); font-size:16.5px; margin:14px 0 0; max-width:46em;}
+  .tensions{display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin-top:24px;}
+  @media(max-width:780px){ .tensions{grid-template-columns:1fr;} }
+  .tension{border:1px solid var(--neg-line); background:var(--neg-bg); border-radius:14px; padding:16px 18px;}
+  .tension .t{font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--neg);}
+  .tension .n{font-size:15.5px; font-weight:700; margin-top:6px; line-height:1.35;}
+  .tension .c{font-size:13.5px; color:#5a2731; margin-top:8px; line-height:1.5;}
+
+  footer{padding:40px 0 60px; border-top:1px solid var(--line); color:var(--muted); font-size:13.5px;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} .cell:hover{transform:none;} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a class="brand" href="./">C2<b>Valis</b></a>
+    <span class="sp"></span>
+    <a class="lnk" href="./#what">The idea</a>
+    <a class="lnk" href="cube.html">The cube</a>
+    <a class="lnk on" href="tradeoffs.html">Trade-offs</a>
+    <a class="lnk" href="score.html">Cube Score</a>
+    <a class="lnk" href="./#toolkit">Toolkit</a>
+    <a class="btn primary" href="./#book">Get the book</a>
+  </div>
+</header>
+
+<div class="intro">
+  <div class="wrap">
+    <span class="eyebrow">Free tool · Chapters 5, 6 and 19</span>
+    <h1>What one face does to the others.</h1>
+    <p class="lede">Optimizing a face of the Cube is never free. Some moves reinforce the rest of the model; six of them
+      create a real tension that has to be managed, not ignored. Pick a cell to see which cubelets drive the effect
+      and what to watch when you make the change.</p>
+    <p class="rule-quote">No face of the cube can be optimized in isolation. Every improvement is judged by its effect
+      on the cube as a whole, or it isn't an improvement, just a displacement you haven't found yet.
+      <span>The interdependence rule, Chapter 5</span></p>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="board">
+    <div>
+      <div class="scroller"><table class="mx" id="mx"></table></div>
+      <div class="legend">
+        <span class="p"><b>+</b>Reinforces</span>
+        <span class="n"><b>&minus;</b>Creates tension</span>
+        <span class="u"><b>·</b>No strong direct interaction</span>
+      </div>
+      <p class="hint">Rows are the face you push. Columns are the face that feels it.</p>
+    </div>
+    <div class="detail" id="detail"></div>
+  </div>
+</div>
+
+<section class="tail">
+  <div class="wrap">
+    <span class="eyebrow">The six that bite</span>
+    <h2>The tensions worth knowing before you cut.</h2>
+    <p class="sub">Every one of these is a saving that books cleanly and takes something back somewhere else. The book
+      names the guardrail for each, which is why three of the fifteen optimization patterns exist only to keep the
+      other twelve honest.</p>
+    <div class="tensions" id="tensions"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p style="margin:0; max-width:52em;">Directional framework guidance, not measured values: the matrix records how these
+      faces typically interact, drawn from the interdependence rule (Ch 5), the principles in tension (Ch 6), the pattern
+      cautions (Ch 19) and the cubelets of Appendix A. Your own system's behaviour is a question for your telemetry.</p>
+    <p style="margin:14px 0 0;">© 2026 Sanjeev Azad · <a href="./">C2Valis home</a> · <a href="cube.html">The cube</a> ·
+      <a href="score.html">Cube Score</a> · <a href="./#book">Get the book</a></p>
+  </div>
+</footer>
+
+<script>
+const SYM = {pos:"+", neg:"−", neu:"·", self:""};
+const LABEL = {pos:"Reinforces", neg:"Creates tension", neu:"No strong direct interaction"};
+let DATA = null, sel = null;
+
+fetch('assets/tradeoffs.json').then(r => r.json()).then(d => { DATA = d; render(); })
+  .catch(() => { document.getElementById('detail').innerHTML =
+    '<p class="hint">The matrix data could not be loaded. Open this page over http rather than from the file system.</p>'; });
+
+function render(){
+  const F = DATA.faces, M = DATA.impact;
+  let h = '<tr><th class="corner">Push this face &rarr;<br>felt by this face &darr;</th>';
+  F.forEach(f => h += `<th>${f.n}<br>${f.short}</th>`);
+  h += '</tr>';
+  M.forEach((row, r) => {
+    h += `<tr><th class="rowh">${F[r].n} · ${F[r].short}</th>`;
+    row.forEach((cell, c) => {
+      const cls = cell.impact;
+      h += `<td><div class="cell ${cls}" data-r="${r}" data-c="${c}"${cls==='self'?'':' tabindex="0" role="button"'}
+             aria-label="${F[r].short} affects ${F[c].short}: ${LABEL[cell.impact]||''}">${SYM[cell.impact]}</div></td>`;
+    });
+    h += '</tr>';
+  });
+  document.getElementById('mx').innerHTML = h;
+
+  document.querySelectorAll('.cell:not(.self)').forEach(el => {
+    const pick = () => show(+el.dataset.r, +el.dataset.c);
+    el.addEventListener('click', pick);
+    el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
+  });
+
+  /* the six tensions, listed so they are readable without clicking */
+  let t = '';
+  M.forEach((row, r) => row.forEach((cell, c) => {
+    if (cell.impact === 'neg')
+      t += `<div class="tension"><div class="t">${DATA.faces[r].short} &rarr; ${DATA.faces[c].short}</div>
+            <div class="n">${cell.note}</div><div class="c">${cell.consider || ''}</div></div>`;
+  }));
+  document.getElementById('tensions').innerHTML = t;
+
+  show(2, 1);   /* open on prompt compression against value: the classic false saving */
+}
+
+function show(r, c){
+  const cell = DATA.impact[r][c], F = DATA.faces;
+  document.querySelectorAll('.cell').forEach(e => e.classList.remove('sel'));
+  const el = document.querySelector(`.cell[data-r="${r}"][data-c="${c}"]`);
+  if (el) el.classList.add('sel');
+  sel = [r, c];
+  document.getElementById('detail').innerHTML = `
+    <div class="d-dir">If you push<br><b>${F[r].full}</b><br>the face that feels it is<br><b>${F[c].full}</b></div>
+    <span class="d-tag ${cell.impact}">${LABEL[cell.impact]}</span>
+    <div class="d-note">${cell.note}</div>
+    ${cell.cubelets && cell.cubelets.length ? `<div class="d-lab">Driven by these cubelets</div>
+      <div class="chips">${cell.cubelets.map(x => `<span>${x}</span>`).join('')}</div>` : ''}
+    ${cell.consider ? `<div class="d-lab">What to consider</div><p class="d-consider">${cell.consider}</p>` : ''}`;
+}
+</script>
+</body>
+</html>
