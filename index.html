@@ -69,7 +69,9 @@
   @media(max-width:780px){ .hero-cover{margin:0 auto;} }
 
   /* sections */
-  section{padding:64px 0; border-top:1px solid var(--line);}
+  /* the header is sticky, so an anchored section must stop clear of it */
+  section{padding:64px 0; border-top:1px solid var(--line); scroll-margin-top:86px;}
+  .hero{scroll-margin-top:86px;}
   h2{font-size:clamp(26px,3.4vw,36px); letter-spacing:-.01em; margin:8px 0 0; font-weight:800;}
   .sub{color:var(--muted); font-size:17px; margin:14px 0 0; max-width:46em;}
   .cards{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:34px;}
@@ -79,6 +81,36 @@
   .card h3{margin:0 0 8px; font-size:18px;}
   .card p{margin:0; color:var(--muted); font-size:15px;}
   .card .tag{display:inline-block; font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); margin-bottom:10px;}
+
+  /* the idea: text beside the shift the book argues for */
+  .idea{display:grid; grid-template-columns:1.12fr .88fr; gap:44px; align-items:start; margin-top:22px;}
+  @media(max-width:860px){ .idea{grid-template-columns:1fr; gap:30px;} }
+  .shift{border:1px solid var(--line); border-radius:16px; background:var(--paper2); padding:20px;}
+  .sh-card{background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px 18px;}
+  .sh-lab{font-size:11px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--muted);}
+  .sh-metric{font-size:20px; font-weight:800; letter-spacing:-.01em; margin-top:7px; line-height:1.2;}
+  .sh-card.old .sh-metric{color:var(--muted); text-decoration:line-through; text-decoration-color:var(--accent); text-decoration-thickness:2px;}
+  .sh-card.new{border-color:rgba(230,0,39,.3); box-shadow:0 10px 26px rgba(230,0,39,.10);}
+  .sh-card.new .sh-metric{color:var(--accent);}
+  .sh-items{display:flex; flex-wrap:wrap; gap:6px; margin-top:12px;}
+  .sh-items span{font-size:11.5px; font-weight:700; color:#3a3a42; background:var(--paper2);
+    border:1px solid var(--line); border-radius:999px; padding:4px 10px;}
+  .sh-card.new .sh-items span{background:#fff4f6; border-color:rgba(230,0,39,.25); color:#7a0016;}
+  .sh-mid{display:flex; align-items:center; gap:10px; margin:12px 2px;}
+  .sh-mid::before,.sh-mid::after{content:""; flex:1; height:1px; background:var(--line);}
+  .sh-mid span{font-size:10.5px; font-weight:800; letter-spacing:.18em; text-transform:uppercase; color:var(--accent);}
+
+  .faces-lab{font-size:12px; font-weight:800; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--muted); margin:44px 0 0;}
+  .faces{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:14px;}
+  @media(max-width:860px){ .faces{grid-template-columns:repeat(2,1fr);} }
+  @media(max-width:560px){ .faces{grid-template-columns:1fr;} }
+  .faces a{display:block; border:1px solid var(--line); border-radius:12px; padding:14px 16px;
+    background:#fff; color:var(--ink); transition:.15s;}
+  .faces a:hover{text-decoration:none; border-color:rgba(230,0,39,.4); box-shadow:0 10px 24px rgba(15,15,18,.07); transform:translateY(-2px);}
+  .faces b{display:block; font-size:12px; color:var(--accent); letter-spacing:.06em;}
+  .faces a{font-size:15px; font-weight:800;}
+  .faces em{display:block; font-style:normal; font-size:12.5px; font-weight:600; color:var(--muted); margin-top:4px; line-height:1.4;}
 
   /* book */
   .bk{display:grid; grid-template-columns:220px 1fr; gap:14px 38px; margin-top:34px; align-items:start;}
@@ -171,8 +203,36 @@
   <div class="wrap">
     <span class="eyebrow">The idea</span>
     <h2>A different way of thinking about enterprise AI.</h2>
-    <p class="sub">Cost is instantly visible; value stays murky, so teams optimize the only number they can see, cutting tokens while quality, trust, and rework quietly erode. C2Valis reframes the problem around the <strong>trusted outcome</strong>: the accepted, citable, useful result. Six faces, 54 cubelets, a guardrail-capped Cube Score, a maturity path, fifteen optimization patterns, and an evidence discipline that forbids a claim until it's proven.</p>
-    <p class="thesis" style="margin-top:28px;">Enterprise AI doesn't need another tool. It needs a different way of thinking.</p>
+    <div class="idea">
+      <div>
+        <p class="sub">Cost is instantly visible; value stays murky, so teams optimize the only number they can see, cutting tokens while quality, trust, and rework quietly erode. C2Valis reframes the problem around the <strong>trusted outcome</strong>: the accepted, citable, useful result.</p>
+        <p class="sub" style="margin-top:16px;">Six faces, 54 cubelets, a guardrail-capped Cube Score, a maturity path, fifteen optimization patterns, and an evidence discipline that forbids a claim until it's proven.</p>
+        <p class="thesis" style="margin-top:28px;">Enterprise AI doesn't need another tool. It needs a different way of thinking.</p>
+      </div>
+      <div class="shift" aria-label="The shift the book argues for">
+        <div class="sh-card old">
+          <div class="sh-lab">What every team can see</div>
+          <div class="sh-metric">Cost per token</div>
+          <div class="sh-items"><span>tokens</span><span>spend</span><span>model price</span></div>
+        </div>
+        <div class="sh-mid"><span>the shift</span></div>
+        <div class="sh-card new">
+          <div class="sh-lab">What actually pays</div>
+          <div class="sh-metric">Value per trusted outcome</div>
+          <div class="sh-items"><span>accepted</span><span>citable</span><span>useful</span></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="faces-lab">The six places value is won or lost</p>
+    <div class="faces">
+      <a href="cube.html#face-1"><b>01</b>Cost Visibility<em>Where is the cost being generated?</em></a>
+      <a href="cube.html#face-2"><b>02</b>Value Intelligence<em>Is the spend creating value?</em></a>
+      <a href="cube.html#face-3"><b>03</b>Prompt Efficiency<em>Are prompts creating waste?</em></a>
+      <a href="cube.html#face-4"><b>04</b>Context Right-Sizing<em>Is retrieval sending the wrong context?</em></a>
+      <a href="cube.html#face-5"><b>05</b>Execution Intelligence<em>Is this the right model and path?</em></a>
+      <a href="cube.html#face-6"><b>06</b>Governance &amp; Scale<em>Can this be trusted and scaled?</em></a>
+    </div>
   </div>
 </section>
 
