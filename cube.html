@@ -1,0 +1,829 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Explore the Value Cube | Six faces, 54 cubelets | C2Valis</title>
+<meta name="description" content="Explore the Value Cube in 3D: the six faces, 54 cubelets, and five cross-cutting dimensions of C2Valis, the vendor-neutral operating model for enterprise GenAI cost-to-value. Free, no signup." />
+<link rel="canonical" href="https://the-value-cube.github.io/cube.html" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="The Value Cube: explore the model" />
+<meta property="og:description" content="Six faces, 54 cubelets, five cross-cutting dimensions. Optimize for value per trusted outcome, not cost per token." />
+<meta property="og:image" content="https://the-value-cube.github.io/assets/cover.jpg" />
+<meta property="og:url" content="https://the-value-cube.github.io/cube.html" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'%3E%3Crect width='44' height='44' rx='12' fill='%23E60027'/%3E%3Crect x='12' y='12' width='20' height='6' rx='2' fill='%23fff'/%3E%3Crect x='12' y='12' width='6' height='20' rx='2' fill='%23fff'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --red:#E60027; --red-deep:#B0001E; --black:#0a0a0c; --ink:#15151a;
+    --paper:#fff; --muted:#6b6b76;
+    --line:rgba(255,255,255,.10);          /* lines INSIDE the dark stage */
+    --line-l:rgba(15,15,18,.12);           /* lines on the light page chrome */
+    --muted-l:#5f5f68; --paper2:#f5f5f7;
+    --cube:340px; --half:170px;
+    --font:'Manrope', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  }
+  @media (max-width:640px){ :root{ --cube:250px; --half:125px; } }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; font-family:var(--font); color:var(--ink);
+    background:linear-gradient(180deg,#fff,var(--paper2));
+    overflow-x:hidden;
+  }
+  /* the particle field belongs to the dark stage now, not the whole page */
+  #bg{position:absolute; inset:0; z-index:0; border-radius:23px;}
+  .wrap{position:relative; z-index:2; max-width:1320px; margin:0 auto; padding:18px clamp(16px,4vw,46px) 50px;}
+  a{color:inherit;}
+
+  /* ---- public top bar ---- */
+  .topbar{position:sticky; top:0; z-index:30; background:rgba(255,255,255,.9); backdrop-filter:blur(10px); border-bottom:1px solid var(--line-l);}
+  .tb-in{max-width:1320px; margin:0 auto; padding:11px clamp(16px,4vw,46px); display:flex; align-items:center; gap:10px;}
+  .tb-brand{font-weight:800; font-size:17px; letter-spacing:.01em; text-decoration:none; color:var(--ink);}
+  .tb-brand b{color:var(--red);}
+  .tb-in .sp{flex:1;}
+  .tb-in a.lnk{color:var(--muted-l); font-weight:600; font-size:13.5px; margin-left:20px; text-decoration:none;}
+  .tb-in a.lnk:hover{color:var(--ink);}
+  .tb-in a.lnk.on{color:var(--ink); font-weight:700; border-bottom:2px solid var(--red); padding-bottom:2px;}
+  .tb-cta{font-weight:800; font-size:13px; padding:9px 16px; border-radius:10px; background:var(--red); color:#fff; text-decoration:none; box-shadow:0 8px 22px rgba(230,0,39,.35); white-space:nowrap;}
+  .tb-cta:hover{background:#c40021;}
+  .tb-cta.on{box-shadow:0 0 0 3px rgba(230,0,39,.28);}   /* lit while you are in the book panel */
+  /* phones: keep every link reachable; wrap them onto a second row instead of hiding them */
+  @media(max-width:760px){
+    .tb-in{flex-wrap:wrap; padding:11px 18px;}
+    .tb-brand{order:1;} .tb-in .sp{order:2;} .tb-cta{order:3;}
+    .tb-in::after{content:""; flex-basis:100%; height:0; order:4;}  /* force the links onto their own row */
+    .tb-in a.lnk{order:5; margin:6px 20px 0 0; font-size:13.5px; padding:8px 0;}
+  }
+
+  /* header */
+  header{display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:16px; margin:10px 0 14px;}
+  .brand{display:flex; align-items:center; gap:14px;}
+  .glyph{width:44px; height:44px; border-radius:12px; background:var(--red); position:relative; box-shadow:0 10px 30px rgba(230,0,39,.45); flex:none;}
+  .glyph::before,.glyph::after{content:""; position:absolute; background:#fff; border-radius:2px;}
+  .glyph::before{inset:12px 12px auto 12px; height:6px;}
+  .glyph::after{inset:12px auto 12px 12px; width:6px;}
+  h1{font-size:clamp(24px,3.2vw,38px); font-weight:800; margin:0; letter-spacing:-.02em;}
+  h1 span{color:var(--red);}
+  .kick{font-size:11px; letter-spacing:.3em; text-transform:uppercase; color:var(--muted-l); font-weight:700; margin-bottom:3px;}
+  .thesis{max-width:420px; text-align:right; font-weight:600; font-size:13.5px; line-height:1.5; color:#3a3a42;}
+  .thesis b{color:var(--ink);} .thesis .x{color:#9a9aa4; text-decoration:line-through; text-decoration-color:var(--red);}
+  @media(max-width:760px){ .thesis{text-align:left; max-width:none;} }
+
+  /* breadcrumb */
+  .crumb{display:flex; align-items:center; gap:9px; font-size:13px; font-weight:700; margin:6px 0 18px; color:var(--muted-l); flex-wrap:wrap;}
+  .crumb a{color:var(--ink); cursor:pointer; text-decoration:none; padding:4px 10px; border-radius:8px; border:1px solid var(--line-l); background:#fff;}
+  .crumb a:hover{background:var(--paper2);}
+  .crumb .sep{color:var(--red); font-weight:800;}
+  .crumb .now{color:var(--ink);}
+
+  /* layout */
+  .grid{display:grid; grid-template-columns:1.12fr .88fr; gap:28px; align-items:stretch;}
+  @media (max-width:940px){ .grid{grid-template-columns:1fr;} }
+
+  /* the one deliberately dark surface: a canvas for the 3D object */
+  .stage-panel{position:relative; border:1px solid rgba(255,255,255,.10); border-radius:24px; color:var(--paper);
+    background:
+      radial-gradient(700px 420px at 78% -10%, rgba(230,0,39,.22), transparent 62%),
+      linear-gradient(180deg,#111116,#08080b);
+    padding:18px; min-height:540px; display:flex; flex-direction:column; overflow:hidden;
+    box-shadow:0 24px 60px rgba(15,15,18,.22);}
+  .stage-panel > :not(#bg){position:relative; z-index:1;}
+  .stage{flex:1; position:relative; min-height:440px;}
+  @media (max-width:640px){ .stage-panel{min-height:0; padding:14px;} .stage{min-height:360px;} }
+
+  /* ---- DEFINITION (3D cube) ---- */
+  .scene{position:absolute; inset:0; display:grid; place-items:center; perspective:1500px; perspective-origin:50% 42%; touch-action:none; cursor:grab; transition:opacity .4s, transform .4s;}
+  .scene:active{cursor:grabbing;}
+  .cube{position:relative; width:var(--cube); height:var(--cube); transform-style:preserve-3d; will-change:transform;}
+  .face{position:absolute; width:var(--cube); height:var(--cube);
+    background:linear-gradient(160deg,#fff 0%,#f3f3f6 100%); color:var(--ink);
+    border-radius:14px; padding:20px 18px; display:flex; flex-direction:column; gap:9px;
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,.06); overflow:hidden; backface-visibility:hidden; cursor:pointer;}
+  .face::before{content:""; position:absolute; top:0; left:0; right:0; height:6px; background:var(--red);}
+  .face.lit{box-shadow:inset 0 0 0 2px var(--red), 0 0 60px rgba(230,0,39,.30);}
+  .f-top{display:flex; align-items:center; justify-content:space-between; margin-top:4px;}
+  .num{font-size:30px; font-weight:800; color:var(--red); line-height:1; letter-spacing:-.03em;}
+  .tool{font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:#fff; background:var(--black); padding:5px 9px; border-radius:999px;}
+  .face h3{font-size:16.5px; font-weight:800; margin:0; line-height:1.16;}
+  .face .q{font-size:12px; font-weight:700; color:var(--red-deep); margin:0; line-height:1.3;}
+  .face .p{font-size:11.5px; color:var(--muted); margin:0; line-height:1.42;}
+  .chips{display:flex; flex-wrap:wrap; gap:6px; margin-top:auto;}
+  .chips span{font-size:10.5px; font-weight:600; color:var(--ink); background:#ececef; border:1px solid #dfdfe4; padding:4px 8px; border-radius:8px;}
+  .face-def{flex:1; min-height:0; width:100%; display:flex; flex-direction:column; gap:9px;}
+  .face-cells{display:none; flex:1; min-height:0; width:100%; flex-direction:column; gap:8px;}
+  .cube.fc .face-def{display:none;}
+  .cube.fc .face-cells{display:flex;}
+  .fc-head{display:flex; align-items:center; gap:8px; margin-top:4px;}
+  .fc-head .fc-num{font-size:22px; font-weight:800; color:var(--red); line-height:1;}
+  .fc-head .t{font-size:13px; font-weight:800; line-height:1.1; color:var(--ink);}
+  .fc-head .fc-tag{margin-left:auto; font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#fff; background:var(--black); padding:4px 7px; border-radius:999px;}
+  .fc-grid{flex:1; min-height:0; display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(3,1fr); gap:6px;}
+  .fc-cell{background:#f0f0f3; border:1px solid #e2e2e7; border-radius:8px; padding:4px 5px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:2px; overflow:hidden; transition:.15s;}
+  .fc-cell:hover{background:#fff; box-shadow:inset 0 0 0 1.5px var(--red);}
+  .fc-cell .n{font-size:9.5px; font-weight:800; color:var(--red); line-height:1;}
+  .fc-cell .nm{font-size:9px; font-weight:700; color:var(--ink); line-height:1.12;}
+  .face .explore{position:absolute; right:14px; bottom:12px; font-size:11px; font-weight:800; color:var(--red); opacity:0; transition:.2s;}
+  .face:hover .explore{opacity:1;}
+
+  .front {transform:rotateY(0deg)   translateZ(var(--half));}
+  .right {transform:rotateY(90deg)  translateZ(var(--half));}
+  .back  {transform:rotateY(180deg) translateZ(var(--half));}
+  .left  {transform:rotateY(-90deg) translateZ(var(--half));}
+  .top   {transform:rotateX(90deg)  translateZ(var(--half));}
+  .bottom{transform:rotateX(-90deg) translateZ(var(--half));}
+
+  /* ---- 3×3 GRID view ---- */
+  .gridview{position:absolute; inset:0; display:flex; flex-direction:column; opacity:0; pointer-events:none; transform:scale(.96); transition:opacity .4s, transform .4s;}
+  .gridview.show{opacity:1; pointer-events:auto; transform:scale(1);}
+  .scene.hide{opacity:0; pointer-events:none; transform:scale(.96);}
+  .gv-head{display:flex; align-items:center; gap:12px; margin:4px 4px 14px;}
+  .gv-head .gn{font-size:26px; font-weight:800; color:var(--red);}
+  .gv-head h3{margin:0; font-size:19px; font-weight:800; line-height:1.15;}
+  .gv-head .gtool{margin-left:auto; font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:#fff; background:var(--red); padding:5px 10px; border-radius:999px; white-space:nowrap;}
+  .cells{flex:1; display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(3,1fr); gap:12px;}
+  .cell{cursor:pointer; border-radius:14px; background:linear-gradient(160deg,#fff,#f1f1f4); color:var(--ink);
+    padding:14px; display:flex; flex-direction:column; gap:6px; position:relative; overflow:hidden;
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,.06); transition:transform .15s, box-shadow .15s;}
+  .cell::before{content:""; position:absolute; top:0; left:0; bottom:0; width:5px; background:#e2e2e7; transition:.15s;}
+  .cell:hover{transform:translateY(-3px); box-shadow:0 14px 30px rgba(0,0,0,.35);}
+  .cell:hover::before, .cell.sel::before{background:var(--red);}
+  .cell.sel{box-shadow:inset 0 0 0 2px var(--red), 0 14px 30px rgba(230,0,39,.25);}
+  .cell .cn{font-size:18px; font-weight:800; color:var(--red); line-height:1;}
+  .cell .cname{font-size:13px; font-weight:800; line-height:1.18;}
+  .cell .cpurp{font-size:10.5px; color:var(--muted); line-height:1.32; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;}
+  @media (max-width:520px){ .cell{padding:10px;} .cell .cpurp{display:none;} .cell .cname{font-size:11.5px;} }
+
+  .hint{position:absolute; left:18px; bottom:12px; font-size:11px; color:rgba(255,255,255,.5); pointer-events:none;}
+  @media (max-width:640px){ .stage{min-height:400px;} }
+  /* touch: give every control a comfortable hit area */
+  @media (hover:none), (max-width:760px){
+    /* let a vertical swipe scroll the page even when it starts on the cube;
+       horizontal drag still rotates, and the face buttons below are the reliable way in */
+    .scene{touch-action:pan-y;}
+    .crumb a{padding:8px 12px;}
+    .xs-chips button{padding:9px 13px; font-size:12px;}
+    .seg button{padding:11px 15px;}
+    .util button{padding:12px 15px;}
+    .fbtn{padding:12px 12px;}
+    .d-list button{padding:12px 11px;}
+  }
+
+  /* ---- Cross-cutting DIMENSIONS view ---- */
+  .dimsview{position:absolute; inset:0; display:flex; flex-direction:column; opacity:0; pointer-events:none; transform:scale(.96); transition:opacity .4s, transform .4s; overflow:auto; padding-bottom:22px;}
+  .dimsview.show{opacity:1; pointer-events:auto; transform:scale(1);}
+  .dv-head{margin:2px 4px 12px;}
+  .dv-kicker{font-size:11px; font-weight:800; letter-spacing:.2em; text-transform:uppercase; color:var(--red);}
+  .dv-head h3{margin:4px 0 0; font-size:18px; font-weight:800; line-height:1.15; color:#fff;}
+  .dim-cards{flex:1; display:grid; grid-template-columns:1fr; gap:10px; align-content:start;}
+  .dim-card{cursor:pointer; text-align:left; font-family:var(--font); color:#fff; border:1px solid var(--line); background:rgba(255,255,255,.05); border-radius:12px; padding:12px 14px; display:flex; align-items:center; gap:12px; transition:.15s;}
+  .dim-card:hover{background:rgba(255,255,255,.1);}
+  .dim-card.sel{background:var(--red); border-color:var(--red); box-shadow:0 10px 26px rgba(230,0,39,.3);}
+  .dim-card .dn{font-size:20px; font-weight:800; color:var(--red); width:24px; flex:none;}
+  .dim-card.sel .dn{color:#fff;}
+  .dc-body{display:flex; flex-direction:column;}
+  .dim-card .dt{font-size:14px; font-weight:800;}
+  .dim-card .di{font-size:11.5px; color:rgba(255,255,255,.6); margin-top:2px; line-height:1.35;}
+  .dim-card.sel .di{color:#fff;}   /* 88% white on red is 3.85:1, below AA for text this size */
+  .xstrip{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:12px; padding:9px 12px; border:1px dashed rgba(255,255,255,.2); border-radius:12px; background:rgba(230,0,39,.06);}
+  .xs-lab{font-size:10px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.6); white-space:nowrap;}
+  .xs-chips{display:flex; flex-wrap:wrap; gap:6px;}
+  .xs-chips button{cursor:pointer; font-family:var(--font); font-size:11px; font-weight:700; color:#fff; background:rgba(255,255,255,.07); border:1px solid var(--line); border-radius:999px; padding:5px 11px; transition:.15s;}
+  .xs-chips button:hover{background:rgba(255,255,255,.14);}
+  .xs-chips button.on{background:var(--red); border-color:var(--red);}
+  .d-qs{display:flex; flex-direction:column; gap:6px; margin-top:10px;}
+  .d-qrow{font-size:13px; color:#3a3a42; line-height:1.4; padding-left:15px; position:relative;}
+  .d-qrow::before{content:"›"; position:absolute; left:0; color:var(--red); font-weight:800;}
+
+  /* controls */
+  .seg{display:inline-flex; flex-wrap:wrap; background:rgba(255,255,255,.05); border:1px solid var(--line); border-radius:11px; padding:3px; margin-top:14px;}
+  .seg button{cursor:pointer; border:0; background:transparent; color:#fff; font-family:var(--font); font-weight:700; font-size:12.5px; padding:8px 16px; border-radius:8px;}
+  .seg button.on{background:var(--red);}
+  .controls{display:flex; flex-wrap:wrap; gap:8px; margin-top:12px;}
+  .fbtn{flex:1 1 auto; min-width:108px; text-align:left; cursor:pointer; border:1px solid var(--line); background:rgba(255,255,255,.04); color:#fff; border-radius:12px; padding:9px 11px; font-family:var(--font); transition:.18s; display:flex; align-items:center; gap:9px;}
+  .fbtn:hover{background:rgba(255,255,255,.09);}
+  .fbtn.active{background:var(--red); border-color:var(--red); box-shadow:0 8px 24px rgba(230,0,39,.4);}
+  .fbtn .i{font-weight:800; font-size:13px; opacity:.75;}
+  .fbtn .t{font-size:11.5px; font-weight:700; line-height:1.12;}
+  .util{display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;}
+  .util button{cursor:pointer; border:1px solid var(--line); background:rgba(255,255,255,.04); color:#fff; border-radius:10px; padding:9px 14px; font-family:var(--font); font-weight:700; font-size:12px;}
+  .util button:hover{background:rgba(255,255,255,.1);} .util button.on{background:var(--red); border-color:var(--red);}
+  :focus-visible{outline:2px solid var(--red); outline-offset:2px;}
+
+  /* detail panel */
+  .detail{border:1px solid var(--line-l); border-radius:24px; padding:28px; color:var(--ink);
+    background:#fff; box-shadow:0 10px 30px rgba(15,15,18,.06); display:flex; flex-direction:column;}
+  @media (max-width:640px){ .detail{padding:20px;} }
+  .d-eyebrow{font-size:12px; font-weight:800; letter-spacing:.2em; color:var(--red); text-transform:uppercase;}
+  .detail h2{font-size:clamp(20px,2.4vw,28px); font-weight:800; margin:6px 0 0; letter-spacing:-.02em; line-height:1.12;}
+  .d-tool{display:inline-block; margin-top:12px; font-size:11px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:#fff; background:var(--red); padding:6px 12px; border-radius:999px;}
+  .d-q{margin-top:18px; font-size:15.5px; font-weight:700; line-height:1.4; padding-left:14px; border-left:3px solid var(--red);}
+  .d-p{margin-top:14px; font-size:14px; color:#3a3a42; line-height:1.6;}
+  .d-lab{margin-top:22px; font-size:11px; font-weight:800; letter-spacing:.2em; text-transform:uppercase; color:var(--muted-l);}
+  .d-list{margin-top:12px; display:flex; flex-direction:column; gap:7px;}
+  .d-list button{display:flex; gap:10px; align-items:center; text-align:left; cursor:pointer; width:100%; font-family:var(--font); color:var(--ink); background:var(--paper2); border:1px solid var(--line-l); border-radius:10px; padding:9px 11px; transition:.15s;}
+  .d-list button:hover{background:#ececf0; border-color:#d5d5dc;} .d-list button.on{background:var(--red); border-color:var(--red); color:#fff;}
+  .d-list .ln{font-weight:800; color:var(--red); width:18px;} .d-list button.on .ln{color:#fff;}
+  .d-list .lt{font-size:13px; font-weight:700;}
+  .d-cta{margin-top:auto; padding-top:20px;}
+  .d-cta button{cursor:pointer; width:100%; border:0; background:var(--red); color:#fff; font-family:var(--font); font-weight:800; font-size:13px; padding:13px; border-radius:12px; box-shadow:0 10px 26px rgba(230,0,39,.35);}
+  .navrow{display:flex; gap:8px; margin-top:16px;}
+  .navrow button{flex:1; cursor:pointer; border:1px solid var(--line-l); background:var(--paper2); color:var(--ink); font-family:var(--font); font-weight:700; font-size:12px; padding:10px; border-radius:10px;}
+  .navrow button:hover{background:#ececf0;}
+
+  /* "in the book" strip inside the detail panel */
+  .inbook{margin-top:20px; border:1px solid rgba(230,0,39,.28); background:#fff4f6; border-radius:12px; padding:12px 14px;}
+  .inbook .ib-lab{font-size:10px; font-weight:800; letter-spacing:.18em; text-transform:uppercase; color:var(--red);}
+  .inbook .ib-t{font-size:13px; font-weight:700; margin-top:5px; line-height:1.35;}
+  .inbook a{display:inline-block; margin-top:8px; font-size:12px; font-weight:800; color:var(--ink); text-decoration:none; border-bottom:2px solid var(--red); padding-bottom:1px;}
+
+  .stage-note{margin-top:14px; font-size:12px; line-height:1.5; color:rgba(255,255,255,.45);}
+
+  /* ---- BOOK section ---- */
+  .booksec{position:relative; z-index:2; margin-top:44px; border:1px solid var(--line-l); border-radius:26px; padding:clamp(22px,3.4vw,40px);
+    background:#fff; box-shadow:0 10px 30px rgba(15,15,18,.06);}
+  .bk-grid{display:grid; grid-template-columns:auto 1fr; gap:clamp(22px,3vw,42px); align-items:start;}
+  @media (max-width:680px){ .bk-grid{grid-template-columns:1fr;} .bk-cover{max-width:180px;} }
+  .bk-cover{width:200px; border-radius:8px; overflow:hidden; box-shadow:0 20px 46px rgba(15,15,18,.2); border:1px solid var(--line-l);}
+  .bk-cover img{display:block; width:100%; height:auto;}
+  .bk-eyebrow{font-size:11px; font-weight:800; letter-spacing:.24em; text-transform:uppercase; color:var(--red);}
+  .bk-title{font-size:clamp(26px,3.6vw,38px); font-weight:800; letter-spacing:-.02em; margin:8px 0 0; line-height:1.08;}
+  .bk-sub{font-size:15.5px; font-weight:600; color:#3a3a42; margin:8px 0 0; line-height:1.45;}
+  .bk-author{font-size:13px; font-weight:700; color:var(--muted-l); margin:12px 0 0; letter-spacing:.04em; text-transform:uppercase;}
+  .bk-blurb{font-size:14.5px; color:#3a3a42; line-height:1.65; margin:18px 0 0; max-width:44em;}
+  .bk-facts{display:flex; flex-wrap:wrap; gap:8px; margin-top:18px;}
+  .bk-facts span{font-size:11.5px; font-weight:700; color:#3a3a42; background:var(--paper2); border:1px solid var(--line-l); border-radius:999px; padding:6px 12px;}
+  .bk-buy{grid-column:1 / -1; display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:14px; margin-top:4px;}
+  .bk-buylab{grid-column:1 / -1; font-size:11px; font-weight:800; letter-spacing:.2em; text-transform:uppercase; color:var(--ink); margin:6px 0 -4px;}
+  .qr-card{border:1px solid var(--line-l); border-radius:16px; background:var(--paper2); padding:14px; display:flex; gap:14px; align-items:center;}
+  .qr-card .qr{width:96px; height:96px; flex:none; background:#fff; border-radius:10px; padding:6px; border:1px solid var(--line-l);}
+  .qr-card .qr svg{display:block; width:100%; height:100%;}
+  .qr-meta{display:flex; flex-direction:column; gap:6px;}
+  .qr-store{font-size:14px; font-weight:800;}
+  .qr-note{font-size:11.5px; color:var(--muted-l); line-height:1.35;}
+  .qr-btn{margin-top:2px; align-self:flex-start; display:inline-block; font-size:12px; font-weight:800; white-space:nowrap; text-decoration:none; color:#fff; background:var(--red); padding:8px 16px; border-radius:9px; text-align:center;}
+  .qr-btn:hover{background:#c40021;}
+  .qr-btn.soon{background:#e7e7ec; border:1px solid var(--line-l); color:var(--muted-l);}
+  .bk-soon{font-size:12.5px; color:var(--muted-l); margin:16px 0 0;}
+  .bk-storenote{grid-column:1 / -1; font-size:12px; color:var(--muted-l); margin:2px 0 0; line-height:1.5;}
+  .qr-scan{font-size:10px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--muted-l);}
+
+  footer{position:relative; z-index:2; max-width:1320px; margin:0 auto; padding:34px clamp(16px,4vw,46px) 60px; font-size:12.5px; color:var(--muted-l); line-height:1.65; border-top:1px solid var(--line-l);}
+  footer a{color:var(--ink); text-decoration:none; border-bottom:1px solid var(--line-l);}
+  footer a:hover{border-color:var(--red);}
+  footer .fbrand{font-size:17px; font-weight:800; color:var(--ink); letter-spacing:.01em;}
+  footer .fbrand b{color:var(--red);}
+  .closing{position:relative; z-index:2; max-width:1320px; margin:26px auto 0; padding:0 clamp(16px,4vw,46px); font-size:12px; color:var(--muted-l); text-align:center;}
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{transition-duration:.01ms !important;}
+  }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="tb-in">
+    <a class="tb-brand" href="./">C2<b>Valis</b></a>
+    <span class="sp"></span>
+    <a class="lnk" href="./#what">The idea</a>
+    <a class="lnk on" id="navSelf" href="cube.html">The cube</a>
+    <a class="lnk" href="score.html">Cube Score</a>
+    <a class="lnk" href="./#toolkit">Toolkit</a>
+    <a class="tb-cta" href="#book">Get the book</a>
+  </div>
+</div>
+
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="glyph" aria-hidden="true"></div>
+      <div><div class="kick">C2Valis · Cost-to-Value Intelligence System</div><h1>The Value <span>Cube</span></h1></div>
+    </div>
+    <p class="thesis">Optimize for <b>value per trusted outcome</b>,<br>not <span class="x">cost per token</span>.</p>
+  </header>
+
+  <div class="crumb" id="crumb"></div>
+
+  <div class="grid">
+    <!-- LEFT -->
+    <div class="stage-panel">
+      <canvas id="bg" aria-hidden="true"></canvas>
+      <div class="stage">
+        <div class="scene" id="scene"><div class="cube" id="cube"></div></div>
+        <div class="gridview" id="gridview">
+          <div class="gv-head"><span class="gn" id="gvNum"></span><h3 id="gvTitle"></h3><span class="gtool" id="gvTool"></span></div>
+          <div class="cells" id="cells"></div>
+        </div>
+        <div class="dimsview" id="dimsview">
+          <div class="dv-head"><span class="dv-kicker">Cross-cutting dimensions</span><h3>Five lenses that read across all six faces</h3></div>
+          <div class="dim-cards" id="dimCards"></div>
+        </div>
+        <div class="hint" id="hint">Drag to rotate · click any face to open its 3×3 grid</div>
+      </div>
+
+      <div class="xstrip" id="xstrip">
+        <span class="xs-lab">Cross-cutting · all 6 faces ›</span>
+        <div class="xs-chips" id="xsChips"></div>
+      </div>
+
+      <div class="seg" id="seg">
+        <button data-v="cube" class="on">Definition</button>
+        <button data-v="fullcube">Full Cube</button>
+        <button data-v="grid">3×3 Grid</button>
+        <button data-v="dims">Dimensions</button>
+      </div>
+      <div class="controls" id="controls"></div>
+      <div class="util">
+        <button id="spin" class="on">⟳ Auto-rotate</button>
+        <button id="reset">Reset</button>
+        <button id="share">🔗 Copy link to this view</button>
+      </div>
+      <p class="stage-note">This is the map, at the altitude of a first read: every face, every cubelet, every dimension, named and defined. The book is where each one becomes a metric, a pattern, a decision, and a way to prove it.</p>
+    </div>
+
+    <!-- RIGHT detail -->
+    <div class="detail" id="detail"></div>
+  </div>
+
+  <!-- ---- BOOK ---- -->
+  <section class="booksec" id="book">
+    <div class="bk-grid">
+      <div class="bk-cover"><img src="assets/cover.jpg" alt="Cover of The Value Cube by Sanjeev Azad" loading="lazy" width="600" height="900"></div>
+      <div>
+        <div class="bk-eyebrow">The book behind the cube · out now</div>
+        <h2 class="bk-title">The Value Cube</h2>
+        <p class="bk-sub">Building the Trusted Outcome Economy with Enterprise AI</p>
+        <p class="bk-author">by Sanjeev Azad</p>
+        <p class="bk-blurb">Enterprises can measure what GenAI <em>costs</em> to the cent, and still can't say what it's <em>worth</em>. So they optimize the only number they can see, cutting tokens while quality, trust, and rework quietly erode. <strong>The Value Cube</strong> is the operating manual for the other way: score the six faces, keep them honest with five cross-cutting dimensions, run the lifecycle, apply the patterns, and refuse to claim a saving until the evidence earns it.</p>
+        <div class="bk-facts">
+          <span>400 pages · 6×9</span>
+          <span>7 parts · 30 chapters</span>
+          <span>Executive &amp; practitioner tracks</span>
+          <span>54 cubelets, fully catalogued</span>
+          <span>15 optimization patterns</span>
+          <span>Cube Score &amp; maturity model</span>
+          <span>Vendor-neutral</span>
+        </div>
+        <p class="bk-soon">Also coming to Flipkart and further channels.</p>
+      </div>
+      <div class="bk-buy" id="buy"></div>
+    </div>
+  </section>
+
+  <p class="closing">6 faces × 9 cubelets = 54 capabilities, kept honest by 5 cross-cutting dimensions · the faces are interdependent, and improving one without watching the others creates false optimization.</p>
+</div>
+
+<footer>
+  <div class="fbrand">C2<b>Valis</b></div>
+  <p>C2Valis is the system; <strong>the Value Cube</strong> is its central model. C2Valis and the accelerator names shown here (ValueBoard, ValueIQ, PromptIQ, ContextIQ, RouteIQ, AgentGuard, GovernIQ, EvidenceHub, PatternHub, CubeScore Engine) are working marks, used pending trademark review. The framework is vendor-neutral; any named tool would be an illustrative example of a capability category, never an endorsement. This page is a free, high-level explorer. It summarizes the model and carries no performance, savings, or ROI claims.</p>
+  <p>© 2026 Sanjeev Azad · <a href="./">C2Valis home</a> · <a href="score.html">Cube Score</a> · <a href="./#toolkit">Toolkit</a> · <a href="#book">Get the book</a></p>
+</footer>
+
+<script src="assets/qr.js"></script>
+<script>
+/* =========================================================================
+   EDIT ME: publishing links. Everything below reads from this block.
+   • siteUrl  : the public URL this page is hosted at (used by the QR fallback,
+                the copy-link button, and the canonical/OG tags in <head>).
+   • stores[].url : paste the live retail URL when the listing goes live.
+                    While it is empty the card shows "Coming soon" and the QR
+                    points at siteUrl#book instead of a dead retailer link.
+   The QR codes are generated in-page from these strings. No rebuild, no CDN.
+   ========================================================================= */
+const BOOK = {
+  siteUrl: 'https://the-value-cube.github.io/',
+  stores: [
+    { name:'Notion Press',  note:'Paperback &amp; hardcover',
+      url:'https://notionpress.com/in/read/the-value-cube/' },
+    { name:'Amazon.in',     note:'India store',
+      url:'https://www.amazon.in/dp/B0HBPGM43Q' },
+    { name:'Amazon.com',    note:'US store',
+      url:'https://www.amazon.com/dp/B0HBP7VHBD' },
+    { name:'Amazon.co.uk',  note:'UK store',
+      url:'https://www.amazon.co.uk/dp/B0HBP7VHBD' }
+  ]
+};
+
+
+/* ============ DATA: the Value Cube (C2Valis) ============ */
+const FACES = [
+ { pos:'front', num:'01', short:'Cost Visibility', title:'Cost Visibility & Spend Intelligence', tool:'ValueBoard', ch:9,
+   q:'Where is GenAI cost being generated?',
+   p:'Understand, attribute, and trend GenAI spend across providers, models, products, features, workflows, teams, clients, and outcomes.',
+   levers:['Spend attribution','Cost-driver mapping','Tokens as a signal','Unit economics'],
+   cubelets:[
+    ['Token Tracking','Capture input, output, cached, and workflow tokens'],
+    ['Cost Attribution','Assign cost to user, team, product, feature, and outcome'],
+    ['Model Spend','Understand cost by model, provider, and deployment'],
+    ['Feature-Level Cost','Identify expensive product capabilities'],
+    ['Workflow Cost','Measure cost across multi-step or agentic flows'],
+    ['Latency Cost','Understand the cost–performance trade-off'],
+    ['Retry Waste','Identify cost from repeated attempts'],
+    ['Failure Waste','Identify cost from failed or unusable outputs'],
+    ['Cost Trends','Track spend patterns, anomalies, and growth']]},
+ { pos:'right', num:'02', short:'Value Intelligence', title:'Value Intelligence & Outcome Realization', tool:'ValueBoard', ch:10,
+   q:'Is GenAI spend actually creating value?',
+   p:'Connect usage to accepted outputs, workflow impact, productivity, quality, risk reduction, and realized business outcomes.',
+   levers:['Outcome units','Acceptance rate','Value realization','Cost-to-value ratio'],
+   cubelets:[
+    ['Outcome Mapping','Connect GenAI use cases to measurable business outcomes'],
+    ['Acceptance Tracking','Track whether outputs are accepted, edited, rejected, or regenerated'],
+    ['Productivity Impact','Measure time saved and effort reduced'],
+    ['Quality Impact','Measure improvement in completeness, consistency, accuracy, or coverage'],
+    ['Rework Reduction','Measure reduction in correction, regeneration, or downstream rework'],
+    ['Risk Reduction','Measure how GenAI helps identify or reduce risk'],
+    ['Cost per Outcome','Calculate cost against useful business results'],
+    ['ROI Indicators','Estimate financial or operational return'],
+    ['Value Score','Combine cost, quality, adoption, and outcome signals into a value view']]},
+ { pos:'back', num:'03', short:'Prompt Efficiency', title:'Prompt & Interaction Efficiency', tool:'PromptIQ', ch:11,
+   q:'Are prompts creating unnecessary waste?',
+   p:'Reduce prompt and interaction waste through reuse, compression, output contracts, version control, and memory summarization.',
+   levers:['Prompt reuse','Output contracts','Compression','Memory summarization'],
+   cubelets:[
+    ['Prompt Linting','Detect waste, ambiguity, duplication, and missing controls'],
+    ['Prompt Compression','Reduce prompt size without losing task intent'],
+    ['Prompt Templates','Standardize reusable task-specific prompts'],
+    ['Output Contracts','Control response format, length, and structure'],
+    ['Response Budgeting','Set expected output size and verbosity level'],
+    ['Prompt Versioning','Track cost and quality across prompt versions'],
+    ['Cache-Aware Design','Improve reuse of stable prompt content'],
+    ['Memory Summarization','Replace full history with compact task state'],
+    ['Interaction Guidance','Help users provide efficient and complete inputs']]},
+ { pos:'left', num:'04', short:'Context Right-Sizing', title:'Context & Knowledge Right-Sizing', tool:'ContextIQ', ch:12,
+   q:'Is RAG sending too much or the wrong context?',
+   p:'Send the right knowledge, not the most knowledge, via retrieval, reranking, deduplication, freshness, access-alignment, and grounding.',
+   levers:['Retrieve & rerank','Deduplication','Grounding','Access-aware context'],
+   cubelets:[
+    ['Retrieval Gating','Decide whether external knowledge is needed'],
+    ['Chunk Quality','Improve document splitting, metadata, and source tracking'],
+    ['Reranking','Select the most relevant evidence'],
+    ['Deduplication','Remove repeated or overlapping content'],
+    ['Context Pruning','Remove irrelevant or low-value passages'],
+    ['Context Compression','Reduce context size while preserving useful information'],
+    ['Freshness Control','Avoid stale or outdated sources'],
+    ['Access-Aware Selection','Ensure context is authorized and policy-compliant'],
+    ['Grounding & Utilization','Verify answer support and measure context usefulness']]},
+ { pos:'top', num:'05', short:'Execution Intelligence', title:'Execution Intelligence', tool:'RouteIQ · AgentGuard', ch:13,
+   q:'Are we using the right model and execution path?',
+   p:'Choose the most appropriate path through routing, cascades, caching, batching, tool-first execution, local models, and agent budgets.',
+   levers:['Model routing','Caching','Batching & cascades','Agent budgets'],
+   cubelets:[
+    ['Task Classification','Understand task type, complexity, risk, and value'],
+    ['Model Routing','Select the right model for the task'],
+    ['Provider Routing','Select the right provider or deployment path'],
+    ['Model Cascading','Escalate only when needed'],
+    ['Batch Execution','Move non-urgent work to asynchronous mode'],
+    ['Prompt & Context Caching','Reuse stable repeated content safely'],
+    ['Semantic Caching','Reuse similar responses with trust gates'],
+    ['Tool-First Execution','Use deterministic tools before LLM calls'],
+    ['Agent Budget Control','Bound agent turns, tools, retries, and tokens']]},
+ { pos:'bottom', num:'06', short:'Governance & Scale', title:'Governance, Risk & Scale', tool:'GovernIQ', ch:14,
+   q:'Can optimization be trusted and scaled?',
+   p:'Make optimization safe, auditable, repeatable, and scalable with policies, quality gates, approvals, and evidence discipline.',
+   levers:['Policies & quality gates','Approvals','Auditability','Evidence discipline'],
+   cubelets:[
+    ['Budget Policies','Control and allocate GenAI spend'],
+    ['Model Policies','Govern model and provider usage'],
+    ['Data Sensitivity','Control data usage, logging, caching, and routing'],
+    ['Prompt Governance','Manage prompt ownership, versioning, and approval'],
+    ['Context Governance','Govern source trust, access, freshness, and citation'],
+    ['Cache Governance','Control cache reuse, freshness, and policy compliance'],
+    ['Agent Governance','Bound agent actions, tools, turns, memory, and cost'],
+    ['Quality Gates','Validate cost optimization against quality expectations'],
+    ['Audit & Scale','Enable traceability, reuse, maturity, and enterprise adoption']]},
+];
+const ORI={front:{rx:0,ry:0},right:{rx:0,ry:-90},back:{rx:0,ry:-180},left:{rx:0,ry:90},top:{rx:-90,ry:0},bottom:{rx:90,ry:0}};
+
+/* Five cross-cutting dimensions that apply to EVERY face */
+const DIMENSIONS=[
+ {num:'A', name:'Cost Efficiency', short:'Cost Efficiency',
+  intent:'Reduce unnecessary spend and improve cost discipline, without breaking the other four.',
+  questions:['Are we reducing avoidable token, model, context, retry, and agent costs?','Are we using cost-effective execution strategies?','Are we measuring cost at the right level of granularity?']},
+ {num:'B', name:'Quality & Trust', short:'Quality & Trust',
+  intent:'Ensure cost optimization does not reduce output quality, reliability, grounding, or user trust.',
+  questions:['Does the optimized output remain accurate and useful?','Is the output accepted by users?','Is the answer grounded where evidence is required?','Are hallucination and error risks controlled?']},
+ {num:'C', name:'Business Value', short:'Business Value',
+  intent:'Ensure GenAI spend is tied to measurable business outcomes.',
+  questions:['What business outcome does this interaction support?','Is the cost justified by the value delivered?','Does the workflow save time, improve quality, reduce risk, or create measurable business impact?']},
+ {num:'D', name:'Risk & Compliance', short:'Risk & Compliance',
+  intent:'Ensure optimization remains safe and compliant.',
+  questions:['Is sensitive data protected?','Is caching allowed for this data type?','Is the selected model or provider permitted?','Are audit and policy requirements satisfied?']},
+ {num:'E', name:'Performance & Scalability', short:'Performance & Scale',
+  intent:'Ensure optimized GenAI systems remain responsive and scalable.',
+  questions:['Is latency acceptable?','Does the system scale under increased usage?','Are batch and real-time workloads separated appropriately?','Are bottlenecks visible and manageable?']},
+];
+
+/* where each thing lives in the book */
+const CHAPTERS={
+  9:'Cost Visibility & Spend Intelligence', 10:'Value Intelligence & Outcome Realization',
+  11:'Prompt & Interaction Efficiency', 12:'Context & Knowledge Right-Sizing',
+  13:'Execution Intelligence', 14:'Governance, Risk & Scale'
+};
+
+/* ============ STATE ============ */
+const S={view:'cube', face:0, cubelet:-1, dim:-1};
+
+/* ============ BUILD 3D FACES + buttons ============ */
+const cube=document.getElementById('cube'), controls=document.getElementById('controls');
+FACES.forEach((f,i)=>{
+  const el=document.createElement('div'); el.className='face '+f.pos; el.dataset.i=i;
+  el.innerHTML=`
+    <div class="face-def">
+      <div class="f-top"><div class="num">${f.num}</div><div class="tool">${f.tool}</div></div>
+      <h3>${f.title}</h3><p class="q">${f.q}</p><p class="p">${f.p}</p>
+      <div class="chips">${f.levers.map(l=>`<span>${l}</span>`).join('')}</div>
+      <span class="explore">Open 3×3 →</span>
+    </div>
+    <div class="face-cells">
+      <div class="fc-head"><span class="fc-num">${f.num}</span><span class="t">${f.short}</span><span class="fc-tag">9 cubelets</span></div>
+      <div class="fc-grid">${f.cubelets.map((c,k)=>`<div class="fc-cell"><span class="n">${k+1}</span><span class="nm">${c[0]}</span></div>`).join('')}</div>
+    </div>`;
+  el.addEventListener('click',()=>{ if(!moved) openGrid(i); });
+  cube.appendChild(el);
+
+  const b=document.createElement('button'); b.className='fbtn'; b.dataset.i=i;
+  b.innerHTML=`<span class="i">${f.num}</span><span class="t">${f.short}</span>`;
+  b.addEventListener('click',()=>selectFace(i));
+  controls.appendChild(b);
+});
+const faceEls=[...cube.querySelectorAll('.face')], btnEls=[...controls.querySelectorAll('.fbtn')];
+
+const dimCards=document.getElementById('dimCards'), xsChips=document.getElementById('xsChips');
+DIMENSIONS.forEach((d,i)=>{
+  const c=document.createElement('div'); c.className='dim-card'; c.dataset.i=i;
+  c.innerHTML=`<span class="dn">${d.num}</span><div class="dc-body"><div class="dt">${d.name}</div><div class="di">${d.intent}</div></div>`;
+  c.addEventListener('click',()=>openDims(i));
+  dimCards.appendChild(c);
+  const b=document.createElement('button'); b.dataset.i=i; b.textContent=d.short; b.title=d.intent;
+  b.addEventListener('click',()=>openDims(i));
+  xsChips.appendChild(b);
+});
+const dimCardEls=[...dimCards.querySelectorAll('.dim-card')], xsChipEls=[...xsChips.querySelectorAll('button')];
+
+/* ============ RENDER ============ */
+const scene=document.getElementById('scene'), gridview=document.getElementById('gridview'),
+      dimsview=document.getElementById('dimsview'),
+      cells=document.getElementById('cells'), detail=document.getElementById('detail'),
+      crumb=document.getElementById('crumb'), hint=document.getElementById('hint'),
+      seg=document.getElementById('seg');
+
+function inBook(lab, text){
+  return `<div class="inbook"><div class="ib-lab">${lab}</div><div class="ib-t">${text}</div>
+    <a href="#book">Get the book →</a></div>`;
+}
+
+function renderCrumb(){
+  const f=FACES[S.face];
+  let h=`<a data-go="cube">The Value Cube</a>`;
+  if(S.view==='grid'){
+    h+=`<span class="sep">›</span><a data-go="grid">${f.short}</a>`;
+    if(S.cubelet>=0) h+=`<span class="sep">›</span><span class="now">${f.cubelets[S.cubelet][0]}</span>`;
+    else h+=`<span class="sep">›</span><span class="now">3×3 Grid</span>`;
+  } else if(S.view==='fullcube'){ h+=`<span class="sep">›</span><span class="now">All 54 cubelets</span>`; }
+  else if(S.view==='dims'){
+    h+=`<span class="sep">›</span><a data-go="dims">Dimensions</a>`;
+    h+=`<span class="sep">›</span><span class="now">${S.dim>=0?DIMENSIONS[S.dim].name:'All 5'}</span>`;
+  }
+  else { h+=`<span class="sep">›</span><span class="now">${f.short}</span>`; }
+  crumb.innerHTML=h;
+  crumb.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{
+    const go=a.dataset.go;
+    if(go==='cube') selectFace(S.face,'cube');
+    else if(go==='dims'){ S.dim=-1; setView(); renderDetail(); renderCrumb(); syncHash(); }
+    else { S.cubelet=-1; renderCells(); renderDetail(); renderCrumb(); syncHash(); }
+  }));
+}
+
+function renderCells(){
+  const f=FACES[S.face];
+  document.getElementById('gvNum').textContent=f.num;
+  document.getElementById('gvTitle').textContent=f.title;
+  document.getElementById('gvTool').textContent=f.tool;
+  cells.innerHTML=f.cubelets.map((c,k)=>`<div class="cell ${k===S.cubelet?'sel':''}" data-k="${k}">
+      <div class="cn">${k+1}</div><div class="cname">${c[0]}</div><div class="cpurp">${c[1]}</div></div>`).join('');
+  cells.querySelectorAll('.cell').forEach(c=>c.addEventListener('click',()=>{ S.cubelet=+c.dataset.k; renderCells(); renderDetail(); renderCrumb(); syncHash(); }));
+}
+
+function renderDetail(){
+  if(S.view==='dims'){
+    if(S.dim<0){
+      detail.innerHTML=`<div class="d-eyebrow">Cross-cutting dimensions</div>
+        <h2>Five lenses on every face</h2>
+        <p class="d-p">The six faces are <em>what</em> you optimize. These five dimensions are <em>how</em> you stay honest while doing it: every face is read through all five. In the Cube Score they appear as cross-cutting dimension scores alongside the six face scores.</p>
+        <div class="d-lab">Pick a dimension</div>
+        <div class="d-list">${DIMENSIONS.map((d,i)=>`<button data-d="${i}"><span class="ln">${d.num}</span><span class="lt">${d.name}</span></button>`).join('')}</div>
+        ${inBook('In the book','Chapter 5 introduces the Cube and its five cross-cutting dimensions; Chapter 16 turns them into a guardrail-capped Cube Score.')}`;
+      detail.querySelectorAll('.d-list button').forEach(b=>b.onclick=()=>openDims(+b.dataset.d));
+      return;
+    }
+    const d=DIMENSIONS[S.dim];
+    detail.innerHTML=`<div class="d-eyebrow">Cross-cutting · ${S.dim+1} of 5</div>
+      <h2>${d.name}</h2>
+      <div class="d-q">${d.intent}</div>
+      <div class="d-lab">It asks, on every face</div>
+      <div class="d-qs">${d.questions.map(q=>`<div class="d-qrow">${q}</div>`).join('')}</div>
+      <div class="d-lab">Reads across all six faces</div>
+      <div class="d-list">${FACES.map((f,i)=>`<button data-f="${i}"><span class="ln">${f.num}</span><span class="lt">${f.short}</span></button>`).join('')}</div>
+      ${inBook('In the book','Chapter 5: the five dimensions, and why a gain on one face never counts until the other four hold.')}
+      <div class="navrow"><button id="dprev">← Previous</button><button id="dnext">Next →</button></div>`;
+    detail.querySelectorAll('.d-list button').forEach(b=>b.onclick=()=>selectFace(+b.dataset.f,'cube'));
+    detail.querySelector('#dprev').onclick=()=>openDims((S.dim+4)%5);
+    detail.querySelector('#dnext').onclick=()=>openDims((S.dim+1)%5);
+    return;
+  }
+  const f=FACES[S.face];
+  if(S.view==='grid' && S.cubelet>=0){
+    const c=f.cubelets[S.cubelet];
+    detail.innerHTML=`<div class="d-eyebrow">${f.short} · Cubelet ${S.cubelet+1} of 9</div>
+      <h2>${c[0]}</h2>
+      <div class="d-q">${c[1]}</div>
+      <div class="d-lab">Belongs to face</div>
+      <p class="d-p" style="margin-top:8px"><b style="color:var(--ink)">${f.num} · ${f.title}</b><br>${f.q}</p>
+      ${inBook('In the book','Chapter '+f.ch+' works this face cubelet by cubelet; Appendix A is the full 54-cubelet reference: signals, anti-patterns, and what "good" looks like for each.')}
+      <div class="navrow"><button id="prev">← Previous</button><button id="next">Next →</button></div>
+      <div class="d-cta"><button id="toGrid">⤴ Back to 3×3 grid</button></div>`;
+    detail.querySelector('#prev').onclick=()=>{ S.cubelet=(S.cubelet+8)%9; renderCells(); renderDetail(); renderCrumb(); syncHash(); };
+    detail.querySelector('#next').onclick=()=>{ S.cubelet=(S.cubelet+1)%9; renderCells(); renderDetail(); renderCrumb(); syncHash(); };
+    detail.querySelector('#toGrid').onclick=()=>{ S.cubelet=-1; renderCells(); renderDetail(); renderCrumb(); syncHash(); };
+  } else {
+    detail.innerHTML=`<div class="d-eyebrow">Face ${f.num} of 06</div>
+      <h2>${f.title}</h2>
+      <span class="d-tool">${f.tool}</span>
+      <div class="d-q">${f.q}</div>
+      <p class="d-p">${f.p}</p>
+      <div class="d-lab">The 9 cubelets (3×3 capability grid)</div>
+      <div class="d-list">${f.cubelets.map((c,k)=>`<button data-k="${k}"><span class="ln">${k+1}</span><span class="lt">${c[0]}</span></button>`).join('')}</div>
+      ${inBook('In the book','Chapter '+f.ch+', '+CHAPTERS[f.ch]+': the metrics, the failure modes, and the patterns that move this face.')}
+      <div class="d-cta"><button id="openGrid">Open the 3×3 grid →</button></div>`;
+    detail.querySelectorAll('.d-list button').forEach(b=>b.onclick=()=>openGrid(S.face,+b.dataset.k));
+    detail.querySelector('#openGrid').onclick=()=>openGrid(S.face);
+  }
+}
+
+function paintFaces(){ faceEls.forEach((e,i)=>e.classList.toggle('lit',i===S.face)); btnEls.forEach((e,i)=>e.classList.toggle('active',i===S.face)); }
+function setSeg(){ seg.querySelectorAll('button').forEach(b=>b.classList.toggle('on', b.dataset.v===S.view)); }
+function setView(){
+  const grid=S.view==='grid', fc=S.view==='fullcube', dims=S.view==='dims';
+  scene.classList.toggle('hide', grid||dims);
+  gridview.classList.toggle('show', grid);
+  dimsview.classList.toggle('show', dims);
+  cube.classList.toggle('fc', fc);
+  hint.textContent = grid ? 'Click a cubelet to see its capability and purpose'
+    : dims ? 'These five dimensions cut across every face. Pick one'
+    : fc ? 'Drag to rotate · all 54 cubelets on the faces · click a face to open its 3×3 grid'
+    : 'Drag to rotate · click any face to open its 3×3 grid';
+  xsChipEls.forEach((e,i)=>e.classList.toggle('on', dims && i===S.dim));
+  dimCardEls.forEach((e,i)=>e.classList.toggle('sel', i===S.dim));
+  setSeg();
+}
+function setMode(v){ S.view=v; S.cubelet=-1; S.dim=-1; paintFaces(); setView(); renderDetail(); renderCrumb(); syncHash(); }
+
+/* navigation */
+function selectFace(i,view){
+  S.face=i; if(view) S.view=view; S.cubelet=-1; S.dim=-1;
+  stopSpin();
+  const o=ORI[FACES[i].pos]; tx=o.rx; ty=nearest(o.ry,ry);
+  if(S.view==='grid') renderCells();
+  paintFaces(); setView(); renderDetail(); renderCrumb(); syncHash();
+}
+function openGrid(i,cubelet){
+  S.face=i; S.view='grid'; S.cubelet=(cubelet==null?-1:cubelet); S.dim=-1;
+  stopSpin();
+  paintFaces(); renderCells(); setView(); renderDetail(); renderCrumb(); syncHash();
+}
+function openDims(i){
+  S.view='dims'; S.dim=(i==null?-1:i);
+  stopSpin();
+  setView(); renderDetail(); renderCrumb(); syncHash();
+}
+seg.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+  const v=b.dataset.v;
+  if(v==='grid') openGrid(S.face);
+  else if(v==='dims') openDims();
+  else setMode(v);
+}));
+
+/* ============ SHAREABLE DEEP LINKS ============ */
+let hashLock=false;
+function syncHash(){
+  let h;
+  if(S.view==='dims') h = S.dim>=0 ? 'dim-'+DIMENSIONS[S.dim].num.toLowerCase() : 'dimensions';
+  else if(S.view==='fullcube') h='all-54';
+  else if(S.view==='grid') h='face-'+(S.face+1)+(S.cubelet>=0?'-'+(S.cubelet+1):'');
+  else h='face-'+(S.face+1);
+  hashLock=true;
+  history.replaceState(null,'','#'+h);
+  setTimeout(()=>hashLock=false,0);
+}
+function applyHash(){
+  const h=(location.hash||'').replace(/^#/,'').toLowerCase();
+  if(!h || h==='book') return false;
+  if(h==='all-54'||h==='fullcube'){ setMode('fullcube'); return true; }
+  if(h==='dimensions'){ openDims(); return true; }
+  let m=h.match(/^dim-([a-e])$/);
+  if(m){ openDims('abcde'.indexOf(m[1])); return true; }
+  m=h.match(/^face-([1-6])(?:-([1-9]))?$/);
+  if(m){ const f=+m[1]-1; m[2]?openGrid(f,+m[2]-1):selectFace(f,'cube'); return true; }
+  return false;
+}
+addEventListener('hashchange',()=>{ if(!hashLock) applyHash(); });
+
+document.getElementById('share').addEventListener('click',async e=>{
+  const btn=e.currentTarget, url=location.href;
+  try{ await navigator.clipboard.writeText(url); btn.textContent='✓ Link copied'; }
+  catch{ btn.textContent=url; }
+  setTimeout(()=>btn.textContent='🔗 Copy link to this view',2200);
+});
+
+/* ============ BOOK / BUY CARDS + QR ============ */
+(function renderBuy(){
+  const box=document.getElementById('buy'), fallback=BOOK.siteUrl.replace(/\/?$/,'/')+'#book';
+  box.innerHTML='<div class="bk-buylab">Buy it: scan or click</div>'+BOOK.stores.map(s=>{
+    const live=!!s.url, target=live?s.url:fallback;
+    let qr;
+    try{ qr=QR.svg(target); }
+    catch(err){ qr='<div style="font:700 10px system-ui;color:#0a0a0c;text-align:center;padding:8px">QR unavailable</div>'; }
+    return `<div class="qr-card">
+      <div class="qr">${qr}</div>
+      <div class="qr-meta">
+        <div class="qr-store">${s.name}</div>
+        <div class="qr-note">${s.note}</div>
+        <a class="qr-btn ${live?'':'soon'}" href="${target}" aria-label="${live?'Buy on '+s.name:s.name+': coming soon'}"${live?' target="_blank" rel="noopener"':''}>${live?'Buy →':'Coming soon'}</a>
+        <div class="qr-scan">${live?'Scan to buy':'Scan for launch updates'}</div>
+      </div>
+    </div>`;
+  }).join('')
+  +'<p class="bk-storenote">Same book, different storefronts. Pick the one for your region. Price, delivery, and which formats are stocked vary by store.</p>';
+})();
+
+/* ---- nav state: "The cube" is the current page until the book panel comes into view ---- */
+(function(){
+  const self=document.getElementById('navSelf'), cta=document.querySelector('.tb-cta'),
+        book=document.getElementById('book'), bar=document.querySelector('.topbar');
+  function spy(){
+    const inBookPanel = book.getBoundingClientRect().top <= bar.offsetHeight + 28;
+    cta.classList.toggle('on', inBookPanel);
+    self.classList.toggle('on', !inBookPanel);
+  }
+  let queued=false;
+  addEventListener('scroll',()=>{ if(queued) return; queued=true;
+    requestAnimationFrame(()=>{ spy(); queued=false; }); }, {passive:true});
+  addEventListener('resize', spy);
+  spy();
+})();
+
+/* ============ CUBE ROTATION ============ */
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let rx=-18, ry=-24, tx=rx, ty=ry, autoSpin=!reduceMotion, moved=false;
+const spinBtn=document.getElementById('spin');
+if(!autoSpin) spinBtn.classList.remove('on');
+function stopSpin(){ autoSpin=false; spinBtn.classList.remove('on'); }
+function apply(){ cube.style.transform=`rotateX(${rx}deg) rotateY(${ry}deg)`; }
+function nearest(t,c){ while(t-c>180)t-=360; while(t-c<-180)t+=360; return t; }
+function loop(){
+  if(dragging){}
+  else if(autoSpin && S.view!=='grid' && S.view!=='dims'){ ry+=0.30; rx+=(-16-rx)*0.02; tx=rx; ty=ry; }
+  else { rx+=(tx-rx)*0.12; ry+=(ty-ry)*0.12; }
+  rx=Math.max(-90,Math.min(90,rx)); apply(); requestAnimationFrame(loop);
+}
+let dragging=false,px=0,py=0;
+function down(x,y){dragging=true;moved=false;px=x;py=y;stopSpin();}
+function move(x,y){ if(!dragging)return; const dx=x-px,dy=y-py; if(Math.abs(dx)+Math.abs(dy)>4)moved=true;
+  ry+=dx*0.4; rx-=dy*0.4; rx=Math.max(-90,Math.min(90,rx)); tx=rx; ty=ry; px=x; py=y; }
+scene.addEventListener('pointerdown',e=>{scene.setPointerCapture(e.pointerId);down(e.clientX,e.clientY);});
+scene.addEventListener('pointermove',e=>move(e.clientX,e.clientY));
+scene.addEventListener('pointerup',()=>dragging=false);
+scene.addEventListener('pointercancel',()=>dragging=false);
+window.addEventListener('keydown',e=>{ if(S.view==='grid'||S.view==='dims')return;
+  const k=e.key; if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(k))return;
+  stopSpin();
+  if(k==='ArrowLeft')ty-=12; if(k==='ArrowRight')ty+=12; if(k==='ArrowUp')tx=Math.max(-90,tx-12); if(k==='ArrowDown')tx=Math.min(90,tx+12); e.preventDefault(); });
+spinBtn.addEventListener('click',()=>{ autoSpin=!autoSpin; spinBtn.classList.toggle('on',autoSpin); });
+document.getElementById('reset').addEventListener('click',()=>{ tx=-18;ty=-24; selectFace(0,'cube'); });
+
+/* ============ CANVAS BG ============ */
+const cv=document.getElementById('bg'), ctx=cv.getContext('2d'), panel=cv.parentElement; let W,H,pts;
+function resize(){ const r=panel.getBoundingClientRect(), w=Math.max(1,r.width), h=Math.max(1,r.height);
+  W=cv.width=w*devicePixelRatio; H=cv.height=h*devicePixelRatio;
+  cv.style.width=w+'px'; cv.style.height=h+'px';
+  const n=Math.min(70,Math.floor(w*h/9000));
+  pts=Array.from({length:n},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.25*devicePixelRatio,vy:(Math.random()-.5)*.25*devicePixelRatio,r:(Math.random()*1.5+.6)*devicePixelRatio}));}
+function draw(){ ctx.clearRect(0,0,W,H); const R=130*devicePixelRatio;
+  if(!reduceMotion) for(const p of pts){p.x+=p.vx;p.y+=p.vy; if(p.x<0||p.x>W)p.vx*=-1; if(p.y<0||p.y>H)p.vy*=-1;}
+  for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const a=pts[i],b=pts[j],d=Math.hypot(a.x-b.x,a.y-b.y);
+    if(d<R){ctx.strokeStyle=`rgba(230,0,39,${(1-d/R)*.32})`;ctx.lineWidth=devicePixelRatio*.6;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}}
+  for(const p of pts){ctx.fillStyle='rgba(255,255,255,.5)';ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fill();}
+  requestAnimationFrame(draw);}
+addEventListener('resize',resize);
+if(window.ResizeObserver) new ResizeObserver(resize).observe(panel);   /* the panel resizes on view changes too */
+
+/* ============ GO ============ */
+resize(); draw(); paintFaces(); setView(); renderDetail(); renderCrumb(); loop();
+if(!applyHash()) syncHash();
+</script>
+</body>
+</html>

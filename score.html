@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cube Score calculator | The Value Cube (C2Valis)</title>
+<meta name="description" content="Score your GenAI system across the six faces of the Value Cube and five cross-cutting dimensions. Get the guardrail-capped Cube Score, its maturity band, an evidence-quality label, and the face to fix first. Free, and nothing you enter is stored or sent." />
+<link rel="canonical" href="https://the-value-cube.github.io/score.html" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Cube Score calculator for the Value Cube" />
+<meta property="og:description" content="Six face scores, five dimension checks, guardrail caps, maturity band, evidence-quality label." />
+<meta property="og:image" content="https://the-value-cube.github.io/assets/cover.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'%3E%3Crect width='44' height='44' rx='12' fill='%23E60027'/%3E%3Crect x='12' y='12' width='20' height='6' rx='2' fill='%23fff'/%3E%3Crect x='12' y='12' width='6' height='20' rx='2' fill='%23fff'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --accent:#E60027; --ink:#0f0f12; --muted:#5f5f68;
+    --paper:#ffffff; --paper2:#f5f5f7; --line:rgba(15,15,18,.12);
+    --man:'Manrope',ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+    --serif:'Source Serif 4',Georgia,serif;
+    --ok:#0b7a3b; --warn:#b06a00;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0; font-family:var(--man); color:var(--ink); background:var(--paper); line-height:1.55;}
+  a{color:var(--accent); text-decoration:none;} a:hover{text-decoration:underline;}
+  .wrap{max-width:1060px; margin:0 auto; padding:0 24px;}
+  .btn{display:inline-block; cursor:pointer; font-family:var(--man); font-weight:700; font-size:14px; padding:11px 18px; border-radius:10px; border:2px solid var(--ink); color:var(--ink); background:transparent; transition:.15s;}
+  .btn:hover{text-decoration:none;}
+  .btn.primary{background:var(--accent); border-color:var(--accent); color:#fff;}
+  .btn.primary:hover{background:#c40021;}
+  .eyebrow{font-size:13px; font-weight:800; letter-spacing:.18em; text-transform:uppercase; color:var(--accent);}
+
+  header{position:sticky; top:0; z-index:20; background:rgba(255,255,255,.92); backdrop-filter:blur(8px); border-bottom:1px solid var(--line);}
+  .nav{display:flex; align-items:center; gap:8px; padding:14px 24px; max-width:1060px; margin:0 auto;}
+  .brand{font-weight:800; font-size:19px; color:var(--ink);} .brand b{color:var(--accent);} .brand:hover{text-decoration:none;}
+  .nav .sp{flex:1;}
+  .nav a.lnk{color:var(--muted); font-weight:600; font-size:14px; margin-left:22px;}
+  .nav a.lnk:hover{color:var(--ink); text-decoration:none;}
+  .nav a.lnk.on{color:var(--ink); font-weight:700; border-bottom:2px solid var(--accent); padding-bottom:2px;}
+  .nav .btn{margin-left:22px; padding:9px 16px;}
+  /* phones: keep every link reachable; wrap them onto a second row instead of hiding them */
+  @media(max-width:820px){
+    .nav{flex-wrap:wrap; padding:12px 20px;}
+    .brand{order:1;} .nav .sp{order:2;} .nav .btn{order:3; margin-left:12px;}
+    .nav::after{content:""; flex-basis:100%; height:0; order:4;}   /* force the links onto their own row */
+    .nav a.lnk{order:5; margin:6px 20px 0 0; font-size:14px; padding:8px 0;}
+  }
+
+  .intro{padding:52px 0 34px; background:linear-gradient(180deg,#fff,var(--paper2));}
+  h1{font-size:clamp(30px,4.4vw,46px); line-height:1.05; letter-spacing:-.02em; margin:12px 0 0; font-weight:800;}
+  .lede{font-size:18px; color:#3a3a42; margin:18px 0 0; max-width:44em;}
+  .disc{margin-top:22px; border-left:3px solid var(--accent); padding:2px 0 2px 16px; font-family:var(--serif); font-size:17px; color:#3a3a42; max-width:44em;}
+
+  .cols{display:grid; grid-template-columns:1fr 380px; gap:34px; padding:38px 0 20px; align-items:start;}
+  @media(max-width:960px){ .cols{grid-template-columns:1fr;} .result{position:static; max-height:none;} }
+
+  .cols > *{min-width:0;}
+  .panel{border:1px solid var(--line); border-radius:16px; padding:22px; background:#fff; min-width:0;}
+  .panel + .panel{margin-top:20px;}
+  .panel h2{margin:0; font-size:19px; font-weight:800; letter-spacing:-.01em;}
+  .panel .hint{margin:6px 0 0; font-size:13.5px; color:var(--muted);}
+
+  .row{display:grid; grid-template-columns:1fr auto; gap:14px; align-items:center; padding:13px 0; border-top:1px solid var(--line);}
+  .row:first-of-type{border-top:0;}
+  .row .rn{font-size:15px; font-weight:700; line-height:1.25;}
+  .row .rn small{display:block; font-weight:600; font-size:12.5px; color:var(--muted); margin-top:3px;}
+  .row .rn .badge{display:inline-block; font-size:10px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); border:1px solid rgba(230,0,39,.35); background:rgba(230,0,39,.06); border-radius:999px; padding:2px 7px; margin-left:8px; vertical-align:1px;}
+  .scale{display:flex; gap:5px;}
+  .scale input{position:absolute; opacity:0; pointer-events:none;}
+  .scale label{cursor:pointer; width:34px; height:34px; display:grid; place-items:center; border-radius:9px; border:1px solid var(--line); background:var(--paper2); font-size:14px; font-weight:800; color:var(--muted); transition:.12s;}
+  .scale label:hover{border-color:var(--accent); color:var(--ink);}
+  .scale input:checked + label{background:var(--accent); border-color:var(--accent); color:#fff;}
+  .scale input:focus-visible + label{outline:2px solid var(--accent); outline-offset:2px;}
+  @media(max-width:520px){
+    .row{grid-template-columns:1fr;}
+    .scale{display:grid; grid-template-columns:repeat(6,1fr); gap:6px; width:100%;}
+    .scale label{width:auto; height:42px; font-size:15px;}
+  }
+
+  .checks{display:flex; flex-direction:column; gap:10px; margin-top:12px;}
+  .check{display:flex; gap:10px; align-items:flex-start; font-size:14.5px;}
+  .check input{margin-top:3px; width:17px; height:17px; accent-color:var(--accent);}
+  .check small{display:block; color:var(--muted); font-size:12.5px;}
+  /* width:100% + min-width:0; without them a <select> forces its widest option's width onto the whole grid column */
+  .sel{font-family:var(--man); font-size:14px; font-weight:600; padding:9px 12px; border-radius:9px; border:1px solid var(--line); background:#fff; margin-top:10px; width:100%; max-width:520px; min-width:0; text-overflow:ellipsis;}
+
+  /* result */
+  /* sticky, but never taller than the viewport; scroll inside instead of hiding its own footer */
+  .result{position:sticky; top:78px; max-height:calc(100vh - 96px); overflow:auto; border:1px solid var(--line); border-radius:18px; background:#fff; box-shadow:0 12px 34px rgba(15,15,18,.07);}
+  .res-top{background:var(--ink); color:#fff; padding:24px;}
+  .res-lab{font-size:11px; font-weight:800; letter-spacing:.2em; text-transform:uppercase; color:rgba(255,255,255,.55);}
+  .res-score{font-size:62px; font-weight:800; line-height:1; letter-spacing:-.03em; margin-top:8px;}
+  .res-score span{font-size:22px; color:rgba(255,255,255,.5); font-weight:700;}
+  .res-score i{font-style:normal; color:rgba(255,255,255,.34); letter-spacing:-.02em;}
+  .res-band{font-size:17px; font-weight:800; margin-top:10px; color:#fff;}
+  .res-band em{display:block; font-style:normal; font-weight:600; font-size:13px; color:rgba(255,255,255,.62); margin-top:4px; line-height:1.4;}
+  .res-avg{font-size:12.5px; color:rgba(255,255,255,.55); margin-top:14px;}
+  .res-body{padding:20px 24px 24px;}
+  .caps{margin:0 0 6px;}
+  .cap{display:flex; gap:9px; align-items:flex-start; font-size:13px; line-height:1.45; padding:9px 11px; border-radius:10px; background:#fff4f6; border:1px solid rgba(230,0,39,.25); color:#7a0016; margin-bottom:8px;}
+  .cap b{font-weight:800;}
+  .cap.soft{background:#fff8ec; border-color:#eccf9a; color:#6b4a05;}
+  .capnote{margin:2px 0 0; font-size:12.5px; color:var(--muted); line-height:1.45;}
+  .nocaps{font-size:13px; color:var(--ok); background:#eefaf2; border:1px solid #bfe6cf; border-radius:10px; padding:9px 11px;}
+  .bars{margin-top:16px;}
+  .bar{display:grid; grid-template-columns:132px 1fr 26px; gap:9px; align-items:center; font-size:12px; margin-bottom:7px;}
+  .bar .bn{color:var(--muted); font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .bar .bt{height:8px; border-radius:99px; background:var(--paper2); overflow:hidden;}
+  .bar .bf{height:100%; background:var(--accent); border-radius:99px;}
+  .bar.low .bn{color:var(--accent);}
+  .bar .bv{text-align:right; font-weight:800;}
+  .bar.dim .bf{background:#9aa0aa;}
+  .startat{margin-top:16px; font-size:13.5px; line-height:1.5; background:var(--paper2); border-radius:10px; padding:12px 13px;}
+  .startat b{color:var(--accent);}
+  .evi{margin-top:14px; font-size:12.5px; color:var(--muted);}
+  .evi .chip{display:inline-block; font-weight:800; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink); background:var(--paper2); border:1px solid var(--line); border-radius:999px; padding:4px 10px; margin-right:6px;}
+  .res-actions{display:flex; gap:8px; margin-top:18px; flex-wrap:wrap;}
+  .res-actions .btn{flex:1; text-align:center; min-width:120px;}
+
+  section.ref{padding:44px 0 60px; border-top:1px solid var(--line);}
+  h2.big{font-size:clamp(22px,3vw,30px); font-weight:800; margin:8px 0 0; letter-spacing:-.01em;}
+  table{width:100%; border-collapse:collapse; margin-top:18px; font-size:14px;}
+  th,td{text-align:left; padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top;}
+  th{font-size:11.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted);}
+  td b{font-weight:800;}
+  .tables{display:grid; grid-template-columns:1fr 1fr; gap:34px;}
+  @media(max-width:820px){ .tables{grid-template-columns:1fr;} }
+  .codify{margin-top:26px; border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:0 12px 12px 0; padding:16px 18px; background:var(--paper2);}
+  .codify .lab{font-size:11px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; color:var(--accent);}
+  .codify p{margin:8px 0 0; font-size:14.5px; color:#3a3a42;}
+
+  footer{padding:40px 0 60px; border-top:1px solid var(--line); color:var(--muted); font-size:13.5px;}
+  footer .brand{font-size:18px;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} }
+  @media print{ header,.res-actions,.nav{display:none;} .result{position:static; box-shadow:none;} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a class="brand" href="./">C2<b>Valis</b></a>
+    <span class="sp"></span>
+    <a class="lnk" href="./#what">The idea</a>
+    <a class="lnk" href="cube.html">The cube</a>
+    <a class="lnk on" href="score.html">Cube Score</a>
+    <a class="lnk" href="./#toolkit">Toolkit</a>
+    <a class="btn primary" href="./#book">Get the book</a>
+  </div>
+</header>
+
+<div class="intro">
+  <div class="wrap">
+    <span class="eyebrow">Free tool · Chapter 16</span>
+    <h1>Score your system.</h1>
+    <p class="lede">Rate one GenAI system across the six faces of the Value Cube and the five cross-cutting dimensions. You get the average, the <strong>guardrail caps</strong> that stop a strong face hiding a broken one, the maturity band, and the face to fix first.</p>
+    <p class="disc">The Cube Score is a structured diagnostic, not a scientific grade, and never a stand-in for validated ROI. It travels with an evidence-quality label for exactly that reason.</p>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="cols">
+    <!-- INPUTS -->
+    <div>
+      <div class="panel">
+        <h2>The six faces</h2>
+        <p class="hint">Score each face 0–5 on the ladder below the calculator. Be honest rather than generous. The shape matters more than the number.</p>
+        <div id="faces"></div>
+      </div>
+
+      <div class="panel">
+        <h2>The five cross-cutting dimensions</h2>
+        <p class="hint">Read <em>across</em> the faces as balancing checks. Quality &amp; Trust is a guardrail: below 2 it caps the overall score.</p>
+        <div id="dims"></div>
+      </div>
+
+      <div class="panel">
+        <h2>Context &amp; evidence</h2>
+        <p class="hint">Two questions that can cap the score, and the honest label for what this assessment rests on.</p>
+        <div class="checks">
+          <label class="check"><input type="checkbox" id="highrisk">
+            <span>This is a <b>high-risk use case</b><small>Regulated, customer-facing, safety-relevant, or handling sensitive data.</small></span></label>
+          <label class="check"><input type="checkbox" id="classified">
+            <span>Risk classification is <b>in place</b> for it<small>A high-risk use case without risk classification caps the overall score at 2.</small></span></label>
+        </div>
+        <label class="check" style="margin-top:16px; display:block;">
+          <span style="font-weight:700; font-size:14.5px;">Evidence quality</span>
+          <select class="sel" id="evidence">
+            <option value="Low">Low: interviews, assumptions, incomplete data</option>
+            <option value="Medium">Medium: partial telemetry, samples, limited review</option>
+            <option value="High">High: complete telemetry, benchmarks, stakeholder validation</option>
+            <option value="Verified">Verified: production data, benchmark results, business-owner sign-off</option>
+          </select>
+        </label>
+        <div class="res-actions">
+          <button class="btn" id="example" type="button">Load the book's running example</button>
+          <button class="btn" id="reset" type="button">Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div>
+      <div class="result">
+        <div class="res-top">
+          <div class="res-lab">Cube Score</div>
+          <div class="res-score" id="score">0.0<span>/5</span></div>
+          <div class="res-band" id="band"></div>
+          <div class="res-avg" id="avg"></div>
+        </div>
+        <div class="res-body">
+          <div class="caps" id="caps"></div>
+          <div class="bars" id="bars"></div>
+          <div class="startat" id="startat"></div>
+          <div class="evi" id="evi"></div>
+          <div class="res-actions">
+            <button class="btn primary" id="copy" type="button">Copy summary</button>
+            <button class="btn" id="print" type="button">Print / PDF</button>
+          </div>
+        </div>
+      </div>
+      <p class="hint" style="margin:14px 4px 0; font-size:12.5px; color:var(--muted);">Nothing you enter leaves your browser: the scoring runs in the page itself, and there is no server, no storage, and no analytics.</p>
+    </div>
+  </div>
+</div>
+
+<section class="ref">
+  <div class="wrap">
+    <span class="eyebrow">How it is computed</span>
+    <h2 class="big">The rules, straight from the book.</h2>
+
+    <div class="codify">
+      <div class="lab">Codify · The formula</div>
+      <p><strong>Cube Score = the average of the six face scores</strong>, interpreted with the five cross-cutting dimension checks and the guardrail caps. No weightings, no composite index, no false precision. A simple average a team can compute in a workshop, made honest by the caps rather than by mathematical elaboration.</p>
+    </div>
+
+    <div class="codify">
+      <div class="lab">Codify · The guardrail caps</div>
+      <p>If <b>governance</b> scores below 2, the overall score cannot exceed <b>3</b>. If the <b>Quality &amp; Trust</b> dimension scores below 2, it cannot exceed <b>3</b>. If a <b>high-risk use case lacks risk classification</b>, it cannot exceed <b>2</b>. If <b>cost visibility is missing</b>, it cannot exceed <b>2</b>. A fatal weakness sets a ceiling that no amount of strength elsewhere can lift.</p>
+    </div>
+
+    <div class="tables">
+      <div>
+        <h3 style="margin:26px 0 0; font-size:17px;">The 0–5 ladder, per face</h3>
+        <table>
+          <tr><th>Score</th><th>What it means on a face</th></tr>
+          <tr><td><b>0</b></td><td>Not implemented, or not even visible</td></tr>
+          <tr><td><b>1</b></td><td>Basic awareness; ad hoc practice</td></tr>
+          <tr><td><b>2</b></td><td>Partially implemented, limited consistency</td></tr>
+          <tr><td><b>3</b></td><td>Managed and repeatable</td></tr>
+          <tr><td><b>4</b></td><td>Optimized and measured</td></tr>
+          <tr><td><b>5</b></td><td>Intelligent, governed, continuously improved</td></tr>
+        </table>
+      </div>
+      <div>
+        <h3 style="margin:26px 0 0; font-size:17px;">The maturity bands</h3>
+        <table>
+          <tr><th>Overall</th><th>Band</th></tr>
+          <tr><td>0.0–0.9</td><td><b>Blind Spend</b>: cost-to-value largely unmanaged</td></tr>
+          <tr><td>1.0–1.9</td><td><b>Visible</b>: basic visibility and awareness exist</td></tr>
+          <tr><td>2.0–2.9</td><td><b>Controlled</b>: some repeatable controls and metrics</td></tr>
+          <tr><td>3.0–3.9</td><td><b>Managed</b>: cost, quality, governance managed across major use cases</td></tr>
+          <tr><td>4.0–4.5</td><td><b>Optimized</b>: patterns actively measured and improved</td></tr>
+          <tr><td>4.6–5.0</td><td><b>Intelligent ValueOps</b>: dynamic, governed, continuously improved</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <p class="hint" style="margin-top:24px; font-size:14px; max-width:52em;">The output is a <em>profile</em>, not a grade: six face scores, five dimension checks, the capped overall, its band, and the evidence label. Its real value is that it points: the lowest face, especially one that triggers a cap, is where improvement starts. Chapters 16 and 17 of <a href="./#book">The Value Cube</a> work through the score and the maturity climb in full.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="brand" style="font-weight:800; color:var(--ink);">C2<b style="color:var(--accent);">Valis</b></div>
+    <p style="margin:10px 0 0; max-width:52em;">A self-assessment instrument from <em>The Value Cube</em>. It produces a structured diagnostic, not a validated financial claim: no savings, ROI, or performance result should be reported on the strength of a Cube Score alone. C2Valis is a working mark, used pending trademark review.</p>
+    <p style="margin:14px 0 0;">© 2026 Sanjeev Azad · <a href="./">C2Valis home</a> · <a href="cube.html">The cube</a> · <a href="./#book">Get the book</a> · <a href="./#toolkit">Toolkit</a></p>
+  </div>
+</footer>
+
+<script>
+const FACES=[
+  {n:'Cost Visibility & Spend Intelligence', s:'Where is GenAI cost being generated?', short:'Cost Visibility', guard:'caps at 2 if missing'},
+  {n:'Value Intelligence & Outcome Realization', s:'Is GenAI spend actually creating value?', short:'Value Intelligence'},
+  {n:'Prompt & Interaction Efficiency', s:'Are prompts creating unnecessary waste?', short:'Prompt Efficiency'},
+  {n:'Context & Knowledge Right-Sizing', s:'Is retrieval sending too much or the wrong context?', short:'Context Right-Sizing'},
+  {n:'Execution Intelligence', s:'Are we using the right model and execution path?', short:'Execution Intelligence'},
+  {n:'Governance, Risk & Scale', s:'Can optimization be trusted and scaled?', short:'Governance & Scale', guard:'caps at 3 below 2'}
+];
+const DIMS=[
+  {n:'Cost Efficiency', short:'Cost Efficiency', s:'Avoidable token, model, context, retry and agent cost'},
+  {n:'Quality & Trust', short:'Quality & Trust', s:'Accuracy, acceptance, grounding, hallucination control', guard:'caps at 3 below 2'},
+  {n:'Business Value', short:'Business Value', s:'Spend tied to a measurable business outcome'},
+  {n:'Risk & Compliance', short:'Risk & Compliance', s:'Sensitive data, permitted models, audit and policy'},
+  {n:'Performance & Scalability', short:'Performance & Scale', s:'Latency, scale under load, visible bottlenecks'}
+];
+const BANDS=[
+  {min:4.6, name:'Intelligent ValueOps', meaning:'Cost-to-value optimization is dynamic, governed, and continuously improved.'},
+  {min:4.0, name:'Optimized', meaning:'Optimization patterns are actively measured and improved.'},
+  {min:3.0, name:'Managed', meaning:'Cost, quality, and governance are managed across major use cases.'},
+  {min:2.0, name:'Controlled', meaning:'Some repeatable controls and metrics exist.'},
+  {min:1.0, name:'Visible', meaning:'Basic visibility and awareness exist.'},
+  {min:0,   name:'Blind Spend', meaning:'Cost-to-value is largely unmanaged.'}
+];
+
+/* null = not yet scored; the tool opens unscored rather than pretending to a zero. */
+const state={faces:Array(6).fill(null), dims:Array(5).fill(null), highrisk:false, classified:false, evidence:'Low'};
+
+function scaleHtml(group,i,val){
+  return `<div class="scale" role="radiogroup" aria-label="score">`+
+    [0,1,2,3,4,5].map(v=>`<input type="radio" name="${group}${i}" id="${group}${i}_${v}" value="${v}" ${v===val?'checked':''}>
+      <label for="${group}${i}_${v}" title="${v}">${v}</label>`).join('')+`</div>`;
+}
+function build(){
+  document.getElementById('faces').innerHTML=FACES.map((f,i)=>`<div class="row">
+    <div class="rn">${i+1}. ${f.n}${f.guard?`<span class="badge">${f.guard}</span>`:''}<small>${f.s}</small></div>
+    ${scaleHtml('f',i,state.faces[i])}</div>`).join('');
+  document.getElementById('dims').innerHTML=DIMS.map((d,i)=>`<div class="row">
+    <div class="rn">${'ABCDE'[i]}. ${d.n}${d.guard?`<span class="badge">${d.guard}</span>`:''}<small>${d.s}</small></div>
+    ${scaleHtml('d',i,state.dims[i])}</div>`).join('');
+  document.querySelectorAll('#faces input').forEach(el=>el.addEventListener('change',e=>{
+    state.faces[+e.target.name.slice(1)]=+e.target.value; render(); }));
+  document.querySelectorAll('#dims input').forEach(el=>el.addEventListener('change',e=>{
+    state.dims[+e.target.name.slice(1)]=+e.target.value; render(); }));
+}
+function bandFor(v){ return BANDS.find(b=>v>=b.min); }
+
+function compute(){
+  const caps=[];
+  if(state.faces[5]!==null && state.faces[5]<2) caps.push({limit:3, why:'Governance, Risk & Scale scores below 2', rule:'weak governance caps the overall at 3'});
+  if(state.dims[1]!==null && state.dims[1]<2)  caps.push({limit:3, why:'The Quality & Trust dimension scores below 2', rule:'a cost gain that costs quality is not a gain'});
+  if(state.highrisk && !state.classified) caps.push({limit:2, why:'A high-risk use case lacks risk classification', rule:'unclassified risk caps the overall at 2'});
+  if(state.faces[0]===0) caps.push({limit:2, why:'Cost visibility is missing (Face 1 scores 0)', rule:'you cannot optimize what you cannot see'});
+  const ceiling=caps.length?Math.min(...caps.map(c=>c.limit)):5;
+  const unscored=state.faces.filter(v=>v===null).length;
+  if(unscored) return {scored:false, unscored, caps, ceiling};
+  const avg=Math.round(state.faces.reduce((a,b)=>a+b,0)/6*10)/10;
+  const final=Math.min(avg, ceiling);
+  return {scored:true, avg, caps, ceiling, final, binding:final<avg};
+}
+
+function bars(){
+  const scored=state.faces.filter(v=>v!==null);
+  const lowest=scored.length?Math.min(...scored):null;
+  const lowIdx=lowest===null?-1:state.faces.indexOf(lowest);
+  const bar=(name,v,cls)=>`<div class="bar ${cls}"><span class="bn">${name}</span>
+      <span class="bt"><span class="bf" style="width:${v===null?0:v/5*100}%"></span></span>
+      <span class="bv">${v===null?'–':v}</span></div>`;
+  return FACES.map((f,i)=>bar(f.short, state.faces[i], i===lowIdx?'low':''))
+    .concat(DIMS.map((d,i)=>bar(d.short, state.dims[i], 'dim'))).join('');
+}
+
+function render(){
+  const r=compute();
+  document.getElementById('bars').innerHTML=bars();
+  document.getElementById('evi').innerHTML=`<span class="chip">Evidence: ${state.evidence}</span>`+
+    (state.evidence==='Low'?'A weakly-supported number. Raising evidence quality is a legitimate improvement goal in itself.'
+     :state.evidence==='Verified'?'Production data, benchmark results, and business-owner sign-off.':'The label is part of the score, not a footnote.');
+
+  if(!r.scored){
+    document.getElementById('score').innerHTML='<i class="ph">–.–</i><span>/5</span>';
+    document.getElementById('band').innerHTML='Not yet scored<em>Score all six faces to get an overall Cube Score and its maturity band.</em>';
+    document.getElementById('avg').textContent=`${r.unscored} of 6 faces still unscored.`;
+    document.getElementById('caps').innerHTML = r.caps.length
+      ? r.caps.map(c=>`<div class="cap soft"><b>Guardrail armed at ${c.limit}.</b> ${c.why} (${c.rule}).</div>`).join('')
+      : `<div class="nocaps">No guardrail triggered so far.</div>`;
+    document.getElementById('startat').innerHTML='<b>Score honestly.</b> The shape of the profile matters more than the number. The lowest face is the one that will move your score.';
+    return;
+  }
+
+  const {avg,caps,final,binding}=r, band=bandFor(final);
+  document.getElementById('score').innerHTML=final.toFixed(1)+'<span>/5</span>';
+  document.getElementById('band').innerHTML=band.name+'<em>'+band.meaning+'</em>';
+  document.getElementById('avg').textContent = binding
+    ? `Average of the six faces: ${avg.toFixed(1)}, capped to ${final.toFixed(1)}.`
+    : `Average of the six faces: ${avg.toFixed(1)}, no cap binds.`;
+
+  document.getElementById('caps').innerHTML = caps.length
+    ? caps.map(c=>`<div class="cap ${c.limit===r.ceiling && binding?'':'soft'}"><b>${c.limit===r.ceiling && binding?'Capped at '+c.limit+'.':'Guardrail triggered, ceiling '+c.limit+'.'}</b> ${c.why} (${c.rule}).</div>`).join('')
+      + (binding?'':`<p class="capnote">Triggered, but not binding: the average already sits below the ceiling. Fix these before the average climbs into them.</p>`)
+    : `<div class="nocaps">No guardrail cap fires. The average stands.</div>`;
+
+  const capFace = binding && caps.find(c=>c.limit===r.ceiling && c.why.startsWith('Governance')) ? 'Governance, Risk & Scale'
+    : binding && caps.find(c=>c.limit===r.ceiling && c.why.startsWith('Cost visibility')) ? 'Cost Visibility & Spend Intelligence' : null;
+  const lowest=Math.min(...state.faces), lowIdx=state.faces.indexOf(lowest);
+  document.getElementById('startat').innerHTML = capFace
+    ? `<b>Start here:</b> ${capFace}. You are capped until it moves; no gain elsewhere can lift the score past ${final.toFixed(1)}.`
+    : `<b>Start here:</b> ${FACES[lowIdx].n}, your lowest face, at ${lowest}.`;
+}
+
+function summary(){
+  const r=compute(), v=x=>x===null?'not scored':x;
+  const head = r.scored
+    ? [`Cube Score: ${r.final.toFixed(1)} / 5 (${bandFor(r.final).name})`,
+       `Average of six faces: ${r.avg.toFixed(1)}${r.binding?` (capped to ${r.final.toFixed(1)})`:' (no cap binds)'}`]
+    : [`Cube Score: incomplete. ${r.unscored} of 6 faces not yet scored.`];
+  return [...head,
+    `Evidence quality: ${state.evidence}`, '',
+    'Faces:', ...FACES.map((f,i)=>`  ${i+1}. ${f.n}: ${v(state.faces[i])}`), '',
+    'Cross-cutting dimensions:', ...DIMS.map((d,i)=>`  ${'ABCDE'[i]}. ${d.n}: ${v(state.dims[i])}`), '',
+    r.caps.length?'Guardrail caps triggered:':'Guardrail caps: none triggered.',
+    ...r.caps.map(c=>`  - Ceiling ${c.limit}: ${c.why}`), '',
+    'Scored with the free Cube Score calculator from The Value Cube (C2Valis).',
+    'A structured diagnostic, not a validated financial claim.'].join('\n');
+}
+
+document.getElementById('highrisk').addEventListener('change',e=>{state.highrisk=e.target.checked; render();});
+document.getElementById('classified').addEventListener('change',e=>{state.classified=e.target.checked; render();});
+document.getElementById('evidence').addEventListener('change',e=>{state.evidence=e.target.value; render();});
+document.getElementById('reset').addEventListener('click',()=>{
+  state.faces=Array(6).fill(null); state.dims=Array(5).fill(null); state.highrisk=false; state.classified=false; state.evidence='Low';
+  document.getElementById('highrisk').checked=false; document.getElementById('classified').checked=false;
+  document.getElementById('evidence').value='Low'; build(); render();
+});
+/* The book's running example: the Enterprise RAG Knowledge Assistant: 3,1,2,2,2,2 → 2.0 / Controlled, evidence Low. */
+document.getElementById('example').addEventListener('click',()=>{
+  state.faces=[3,1,2,2,2,2]; state.dims=[3,2,1,2,3]; state.highrisk=false; state.classified=false; state.evidence='Low';
+  document.getElementById('highrisk').checked=false; document.getElementById('classified').checked=false;
+  document.getElementById('evidence').value='Low'; build(); render();
+});
+document.getElementById('copy').addEventListener('click',async e=>{
+  const b=e.currentTarget;
+  try{ await navigator.clipboard.writeText(summary()); b.textContent='✓ Copied'; }
+  catch{ b.textContent='Copy failed'; }
+  setTimeout(()=>b.textContent='Copy summary',2000);
+});
+document.getElementById('print').addEventListener('click',()=>print());
+
+build(); render();
+</script>
+</body>
+</html>
