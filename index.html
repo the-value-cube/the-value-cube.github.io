@@ -143,6 +143,10 @@
   .buy-meta{min-width:0; display:flex; flex-direction:column; gap:5px;}
   .buy-store{font-size:14px; font-weight:800; line-height:1.15;}
   .buy-note{font-size:11.5px; color:var(--muted); line-height:1.35;}
+  /* the coupon, at the point of decision — the top strip is easy to scroll past */
+  .buy-deal{font-size:11.5px; font-weight:800; color:var(--accent); line-height:1.35; margin-top:3px;}
+  .buy-deal b{background:rgba(230,0,39,.09); border:1px dashed rgba(230,0,39,.4);
+    border-radius:5px; padding:1px 5px; letter-spacing:.04em;}
   .buy-card .btn{align-self:flex-start; margin-top:2px; padding:8px 16px; font-size:12px; border-radius:9px; white-space:nowrap;}
   .buy-card .btn:hover{transform:none;}
   .scan{display:block; font-size:10px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-top:1px;}
@@ -346,7 +350,8 @@
 /* ===== EDIT ME: retail links. QR codes are generated from these strings. ===== */
 const STORES = [
   { name:'Notion Press',  note:'Paperback &amp; hardcover',
-    url:'https://notionpress.com/in/read/the-value-cube/' },
+    url:'https://notionpress.com/in/read/the-value-cube/',
+    deal:'40% off with <b>FIRSTREAD</b>' },
   { name:'Amazon.in',     note:'India store',
     url:'https://www.amazon.in/dp/B0HBPGM43Q' },
   { name:'Amazon.com',    note:'US store',
@@ -389,12 +394,14 @@ document.getElementById('buy').innerHTML = STORES.map(s=>{
     <div class="buy-meta">
       <div class="buy-store">${s.name}</div>
       <div class="buy-note">${s.note}</div>
+      ${s.deal?`<div class="buy-deal">${s.deal}</div>`:''}
       <a class="btn primary" href="${s.url}" target="_blank" rel="noopener" aria-label="Buy on ${s.name}">Buy →</a>
       <span class="scan">Scan to buy</span>
     </div>
   </div>`;
 }).join('');
 </script>
+<script src="assets/promo.js" defer></script>
 <script src="assets/analytics.js" data-page="index" defer></script>
 </body>
 </html>

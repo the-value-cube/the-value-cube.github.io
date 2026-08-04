@@ -268,6 +268,9 @@
   .qr-meta{display:flex; flex-direction:column; gap:6px;}
   .qr-store{font-size:14px; font-weight:800;}
   .qr-note{font-size:11.5px; color:var(--muted-l); line-height:1.35;}
+  .qr-deal{font-size:11.5px; font-weight:800; color:var(--accent); line-height:1.35; margin-top:3px;}
+  .qr-deal b{background:rgba(230,0,39,.09); border:1px dashed rgba(230,0,39,.4);
+    border-radius:5px; padding:1px 5px; letter-spacing:.04em;}
   .qr-btn{margin-top:2px; align-self:flex-start; display:inline-block; font-size:12px; font-weight:800; white-space:nowrap; text-decoration:none; color:#fff; background:var(--red); padding:8px 16px; border-radius:9px; text-align:center;}
   .qr-btn:hover{background:#c40021;}
   .qr-btn.soon{background:#e7e7ec; border:1px solid var(--line-l); color:var(--muted-l);}
@@ -403,7 +406,8 @@ const BOOK = {
   siteUrl: 'https://the-value-cube.github.io/',
   stores: [
     { name:'Notion Press',  note:'Paperback &amp; hardcover',
-      url:'https://notionpress.com/in/read/the-value-cube/' },
+      url:'https://notionpress.com/in/read/the-value-cube/',
+      deal:'40% off with <b>FIRSTREAD</b>' },
     { name:'Amazon.in',     note:'India store',
       url:'https://www.amazon.in/dp/B0HBPGM43Q' },
     { name:'Amazon.com',    note:'US store',
@@ -760,6 +764,7 @@ document.getElementById('share').addEventListener('click',async e=>{
       <div class="qr-meta">
         <div class="qr-store">${s.name}</div>
         <div class="qr-note">${s.note}</div>
+        ${s.deal?`<div class="qr-deal">${s.deal}</div>`:''}
         <a class="qr-btn ${live?'':'soon'}" href="${target}" aria-label="${live?'Buy on '+s.name:s.name+': coming soon'}"${live?' target="_blank" rel="noopener"':''}>${live?'Buy →':'Coming soon'}</a>
         <div class="qr-scan">${live?'Scan to buy':'Scan for launch updates'}</div>
       </div>
@@ -833,6 +838,7 @@ if(window.ResizeObserver) new ResizeObserver(resize).observe(panel);   /* the pa
 resize(); draw(); paintFaces(); setView(); renderDetail(); renderCrumb(); loop();
 if(!applyHash()) syncHash();
 </script>
+<script src="assets/promo.js" defer></script>
 <script src="assets/analytics.js" data-page="cube" defer></script>
 </body>
 </html>

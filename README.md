@@ -116,6 +116,37 @@ Console** and **Bing Webmaster Tools** report the queries that find the site.
 Verification meta tags are stubbed, commented out, in the `<head>` of
 `index.html`; `sitemap.xml` and `robots.txt` are already in place.
 
+## The launch-offer strip
+
+`assets/promo.js` injects the sticky red line above the header on all five
+pages. Everything about the offer — wording, code, link, and an optional end
+date — is the `PROMO` object at the top of that one file. Nothing else
+references it.
+
+- **To change the offer:** edit `PROMO`. One file, all five pages.
+- **To take it down:** set `PROMO.ends` to a past date, or delete the
+  `<script src="assets/promo.js">` line from the five pages. Setting `ends` in
+  advance is safer — an expired offer can't outlive your attention.
+- **`textShort`** is what phones show. The strip must stay one line there; the
+  nav below it already wraps to two rows, and a wrapping strip on top pushes the
+  hero off the screen.
+
+It also injects nothing until it has measured itself: on load it finds every
+sticky element on the page and pushes each down by the strip's height, then sets
+`scroll-padding-top` so anchor links still land in the right place. That is why
+adding it needed no CSS changes in the five pages.
+
+The Notion Press **buy card** carries the code separately, via the `deal` field
+in `STORES` (`index.html`) and `BOOK.stores` (`cube.html`). The top strip is
+easy to scroll past; the card is where the decision actually happens. Only
+Notion Press has a `deal` — the code does not work on Amazon, and putting it on
+those cards would be a false claim.
+
+Two events land in analytics: `promo_code_copied` and `promo_click`. The strip's
+CTA is also an ordinary outbound link, so `buy_click` fires as well —
+`promo_click` is what separates a sale the strip earned from one the buy cards
+earned.
+
 ## Campaign tagging
 
 Analytics can only attribute a visit if the link says where it came from.
