@@ -385,7 +385,7 @@
 <footer>
   <div class="fbrand">C2<b>Valis</b></div>
   <p>C2Valis is the system; <strong>the Value Cube</strong> is its central model. C2Valis and the accelerator names shown here (ValueBoard, ValueIQ, PromptIQ, ContextIQ, RouteIQ, AgentGuard, GovernIQ, EvidenceHub, PatternHub, CubeScore Engine) are working marks, used pending trademark review. The framework is vendor-neutral; any named tool would be an illustrative example of a capability category, never an endorsement. This page is a free, high-level explorer. It summarizes the model and carries no performance, savings, or ROI claims.</p>
-  <p>© 2026 Sanjeev Azad · <a href="./">C2Valis home</a> · <a href="cube.html">The cube</a> · <a href="tradeoffs.html">Trade-offs</a> · <a href="score.html">Cube Score</a> · <a href="#book">Get the book</a> · <a href="./#toolkit">Toolkit</a></p>
+  <p>© 2026 Sanjeev Azad · <a href="./">C2Valis home</a> · <a href="cube.html">The cube</a> · <a href="tradeoffs.html">Trade-offs</a> · <a href="score.html">Cube Score</a> · <a href="#book">Get the book</a> · <a href="./#toolkit">Toolkit</a> · <a href="privacy.html">Privacy</a></p>
 </footer>
 
 <script src="assets/qr.js"></script>
@@ -749,7 +749,7 @@ document.getElementById('share').addEventListener('click',async e=>{
 
 /* ============ BOOK / BUY CARDS + QR ============ */
 (function renderBuy(){
-  const box=document.getElementById('buy'), fallback=BOOK.siteUrl.replace(/\/?$/,'/')+'#book';
+  const box=document.getElementById('buy'), fallback=BOOK.siteUrl.replace(/\/?$/,'/')+'?src=cube-qr#book';
   box.innerHTML='<div class="bk-buylab">Buy it: scan or click</div>'+BOOK.stores.map(s=>{
     const live=!!s.url, target=live?s.url:fallback;
     let qr;
@@ -833,5 +833,6 @@ if(window.ResizeObserver) new ResizeObserver(resize).observe(panel);   /* the pa
 resize(); draw(); paintFaces(); setView(); renderDetail(); renderCrumb(); loop();
 if(!applyHash()) syncHash();
 </script>
+<script src="assets/analytics.js" data-page="cube" defer></script>
 </body>
 </html>
