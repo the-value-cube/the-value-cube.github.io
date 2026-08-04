@@ -17,10 +17,14 @@
 
 const GA_MEASUREMENT_ID = 'G-8HRCH0QG8S';   // the-value-cube.github.io web stream
 
-/* Cookieless mode. true  = no cookies, no consent banner needed, but returning
-                            visitors can't be told apart, so "users" is modelled.
-                     false = standard GA4 with cookies and accurate user counts,
-                            which in the UK/EU obliges you to ask consent first.
+/* Cookieless mode.
+   true  = GA writes nothing to the visitor's device. Pageviews, events and
+           traffic sources are all exact and appear in reports as normal, but
+           GA mints a fresh anonymous ID on every page load, so "users" and
+           "sessions" roughly track pageviews rather than people. Read those two
+           metrics as noise; everything else is real.
+   false = standard GA4 with cookies. Accurate users and sessions, and in the
+           UK/EU you then owe visitors a consent banner before it may run.
    See README → "Analytics" before flipping this. */
 const COOKIELESS = true;
 
@@ -52,14 +56,25 @@ const COOKIELESS = true;
   function gtag() { window.dataLayer.push(arguments); }
   window.gtag = window.gtag || gtag;
 
-  if (COOKIELESS) {
-    gtag('consent', 'default', {
-      ad_storage: 'denied',
-      ad_user_data: 'denied',
-      ad_personalization: 'denied',
-      analytics_storage: 'denied'
-    });
-  }
+  /* Advertising signals are refused outright and unconditionally — this site
+     has nothing to do with ads.
+
+     analytics_storage stays GRANTED on purpose, and the cookielessness is done
+     with client_storage:'none' below instead. Denying analytics_storage looks
+     like the more private choice but is the wrong tool here: it downgrades
+     every hit to a "cookieless ping" carrying no client or session ID, useful
+     only as input to Google's behavioural modelling — and that modelling needs
+     ~1,000 denied events a day for 7 days plus ~1,000 consenting users a day
+     before it turns on. Below that threshold the pings arrive and nothing comes
+     back out in the reports. client_storage:'none' gets the same result that
+     actually matters (nothing written to the visitor's device) while the data
+     still lands in Reports and Realtime. */
+  gtag('consent', 'default', {
+    ad_storage: 'denied',
+    ad_user_data: 'denied',
+    ad_personalization: 'denied',
+    analytics_storage: 'granted'
+  });
 
   const cfg = {
     anonymize_ip: true,

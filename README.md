@@ -66,13 +66,26 @@ the `G-…` Measurement ID into `GA_MEASUREMENT_ID` at the top of the file and
 publish. Until a real ID is there the file loads nothing at all, so the site is
 safe to ship untagged.
 
-**Cookieless by default.** `COOKIELESS = true` sets Google Consent Mode to deny
-storage, so no cookie is written and no consent banner is owed to UK/EU
-visitors. The cost is that returning visitors can't be told from new ones —
-"users" becomes a modelled number while pageviews and events stay exact. Set it
-to `false` for standard GA4 with accurate user counts, but then you need a
-consent banner before it may run in the UK/EU, and `privacy.html` needs
-rewriting to match.
+**Cookieless by default.** `COOKIELESS = true` sets `client_storage: 'none'`, so
+GA writes nothing at all to the visitor's device — no cookie, no identifier —
+and no consent banner is owed to UK/EU visitors for storage. Advertising
+signals are refused unconditionally, separately from that flag.
+
+The cost is confined to two metrics: GA mints a fresh anonymous ID on every page
+load, so **"users" and "sessions" roughly track pageviews rather than people.**
+Ignore those two. Pageviews, events, pages, and traffic sources are all exact.
+
+Set `COOKIELESS = false` for standard GA4 with accurate users and sessions —
+but then you owe UK/EU visitors a consent banner before it may run, and
+`privacy.html` needs rewriting to match.
+
+> **Do not** "improve" this by denying `analytics_storage` in the consent
+> defaults. It looks more private but downgrades every hit to a cookieless ping
+> with no client or session ID, which GA only uses as input to behavioural
+> modelling — and modelling needs roughly 1,000 denied events a day for 7 days
+> *plus* 1,000 consenting users a day before it activates. Under that threshold
+> the data arrives and the reports stay empty. The comment in `analytics.js`
+> says the same thing; it is there because this exact mistake was made once.
 
 **Your own visits don't count.** Local previews are skipped entirely. On the
 live site, open any page once with `?tvc-optout=1` and that browser is silenced
